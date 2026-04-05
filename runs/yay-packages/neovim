@@ -1,0 +1,4 @@
+yay --noconfirm --needed -S bob
+
+bob install latest
+

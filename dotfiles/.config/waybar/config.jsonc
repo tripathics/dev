@@ -1,0 +1,114 @@
+// base: https://github.com/victordantasdev/waybar
+{
+  "layer": "top",
+  "position": "top",
+  "modules-left": [
+    "custom/padding",
+    "hyprland/submap",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "hyprland/workspaces",
+    "custom/music"
+  ],
+  "modules-right": [
+    "pulseaudio",
+    "backlight",
+    "custom/nightlight",
+    "battery",
+    "tray",
+    "clock",
+    "custom/padding"
+  ],
+  "custom/padding": {
+    "format": " "
+  },
+  "hyprland/submap": {
+    "format": " {}",
+    "tooltip": false
+  },
+  "hyprland/workspaces": {
+    "format": "{icon} {name}",
+    "format-icons": {
+      "active": "",
+      "default": ""
+    }
+  },
+  "hyprland/window": {
+    "max-length": 60,
+    "separate-outputs": true,
+    "icon": true,
+    "icon-size": 18
+  },
+  "tray": {
+    "icon-size": 16,
+    "spacing": 10
+  },
+  "custom/music": {
+    "format": "  {}",
+    "escape": true,
+    "interval": 5,
+    "tooltip": false,
+    "exec": "playerctl metadata --format='{{ artist }} - {{ title }}'",
+    "on-click": "playerctl play-pause",
+    "max-length": 50
+  },
+  "custom/nightlight": {
+    // "format": "{}",
+    "interval": "once",
+    "exec": "~/.config/waybar/scripts/hyprsunsetctl.sh -g",
+    "on-click": "~/.config/waybar/scripts/hyprsunsetctl.sh; pkill -SIGRTMIN+8 waybar",
+    "signal": 8,
+    "return-type": "json"
+  },
+  "clock": {
+    "timezone": "Asia/Kolkata",
+    "tooltip-format": "<big>{:%a, %b-%d %H:%M:%S}</big>\n<tt><big>{calendar}</big></tt>",
+    "format": "{:%a %d - %H:%M}",
+    "format-alt": "{:%a, %b-%d %H:%M:%S}",
+    "interval": 1
+  },
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "tooltip-format": "Brightness: {percent}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "battery": {
+    "states": {
+      "warning": 20,
+      "critical": 10
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󱐋 {capacity}%",
+    "format-plugged": " {capacity}%",
+    "format-icons": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "  {volume}%",
+    "format-icons": {
+      "default": [
+        "",
+        "",
+        " "
+      ]
+    },
+    "on-click": "pavucontrol"
+  }
+}

@@ -1,0 +1,14 @@
+# nodejs with pnpm
+yay -S --noconfirm --needed fnm
+
+eval "$(fnm env)"
+
+# install nodejs
+fnm install --lts
+fnm default lts-latest
+
+# Download and install pnpm
+corepack enable pnpm 
+
+# setup pnpm
+pnpm setup

@@ -1,0 +1,158 @@
+/* base: https://github.com/victordantasdev/waybar */
+
+* {
+  font-family: JetbrainsMono Nerd Font;
+  font-size: 15px;
+  min-height: 0;
+  padding-bottom: 0px;
+}
+
+#custom-padding {
+  font-size: 0px;
+  padding: 0 2px;
+}
+
+button {
+  background: transparent;
+}
+
+#waybar {
+  background: transparent;
+  color: #c6d0f5;
+}
+
+#workspaces {
+  border-radius: 5px;
+  background: #101010;
+  margin: 4px;
+}
+
+#workspaces button {
+  color: #babbf1;
+  border-radius: 5px;
+  padding: 0 8px;
+  border: none;
+  border-top: solid 1px transparent;
+}
+
+#workspaces button.active {
+  border-top: solid 1px #babbf1;
+  font-weight: 700;
+  border-radius: 5px;
+}
+
+#workspaces button:hover {
+  border-top: none;
+}
+
+#submap {
+  background-color: #f2d90a;
+  color: #101010;
+  padding: 0px 10px;
+  margin: 4px 2px;
+  border-radius: 5px 5px 5px 5px;
+  border: solid 2px #101010;
+  font-weight: bold;
+}
+
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+#window,
+#custom-music,
+#custom-nightlight,
+#tray,
+#backlight,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#cpu,
+#memory {
+  background-color: #101010;
+  /* padding: 0.5rem 1rem; */
+  padding: 0.2rem 0.8rem;
+  margin: 4px 0;
+  border-radius: 0;
+}
+
+#clock,
+#window {
+  font-weight: 600;
+  margin-left: 2px;
+  margin-right: 2px;
+}
+
+#window,
+#custom-music,
+#clock,
+#custom-lock {
+  border-radius: 5px;
+}
+
+#tray {
+  border-radius: 0px 5px 5px 0px;
+}
+
+#pulseaudio {
+  border-radius: 5px 0px 0px 5px;
+}
+
+#battery {
+  color: #a6d189;
+}
+
+#battery.charging {
+  color: #a6d189;
+}
+
+#battery.warning:not(.charging) {
+  color: #000;
+  background-color: #8dda7e;
+}
+
+#battery.critical:not(.charging) {
+  background-color: #b22123;
+  color: #fff;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: steps(12);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink {
+  to {
+    background-color: #ee0000;
+  }
+}
+
+#backlight {
+  color: #e5c890;
+}
+
+#pulseaudio {
+  color: #ea999c;
+}
+
+#pulseaudio.muted {
+  color: #777777;
+}
+
+#custom-music {
+  color: #ca9ee6;
+  border-radius: 5px;
+}
+
+#custom-nightlight {
+  /* font-size: 16px; */
+}
+
+#custom-nightlight.enabled {
+  color: #ebebeb;
+}
+
+#custom-nightlight.disabled {
+  color: #78a9ff;
+}

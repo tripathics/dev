@@ -1,0 +1,39 @@
+#!/bin/bash
+
+app_dirs=(
+  ~/.local/share/applications
+  /usr/share/applications
+  ~/.local/share/flatpak/exports/share/applications
+)
+
+CURRENT_DESKTOP="$XDG_CURRENT_DESKTOP"
+
+build_menu() {
+  for dir in "${app_dirs[@]}"; do
+    [ -d "$dir" ] || continue
+    for f in "$dir"/*.desktop; do
+      [ -f "$f" ] || continue
+
+      name=$(grep -m1 '^Name=' "$f" | cut -d= -f2-)
+      icon=$(grep -m1 '^Icon=' "$f" | cut -d= -f2-)
+
+      [ -n "$name" ] || continue
+
+      nodisplay=$(grep -m1 '^NoDisplay=' "$f" | cut -d= -f2-)
+      [[ "$nodisplay" == "true" ]] && continue
+
+      printf "%s\0icon\x1f%s\n" "$name" "$icon"
+    done
+  done
+}
+
+choice=$(build_menu | rofi -dmenu -i -matching fuzzy -show-icons -p " ")
+[[ -z $choice ]] && exit 0
+
+desktop=$(grep -ril "^Name=$choice$" "${app_dirs[@]}" 2>/dev/null | head -n 1)
+
+if [ -n "$desktop" ]; then
+  gtk-launch "$(basename "$desktop")"
+else
+  xdg-open "https://www.google.com/search?q=$(printf '%s' "$choice" | sed 's/ /+/g')"
+fi

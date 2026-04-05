@@ -1,0 +1,1 @@
+sudo pacman -S --needed --noconfirm fzf tmux bash-completion starship

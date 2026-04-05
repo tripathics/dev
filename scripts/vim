@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [[ $# == 0 ]]; then
+  if [[ -f 'Session.vim' ]]; then
+    nvim -S Session.vim
+  else
+    nvim
+  fi
+else
+  nvim "$@"
+fi
+

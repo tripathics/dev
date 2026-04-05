@@ -1,0 +1,22 @@
+command -v yay &>/dev/null || {
+  [ -d tmp ] || mkdir tmp
+  pushd tmp
+  sudo pacman -S --needed git base-devel
+  git clone https://aur.archlinux.org/yay.git yay
+  pushd yay
+  makepkg -si --noconfirm --needed
+
+  popd
+  rm -rf yay
+
+  popd
+}
+
+# Install yay packages from yay-packages/
+YAY_PACKAGES="./yay-packages"
+
+for script in "$YAY_PACKAGES"/*; do
+  [ -f "$script" ] || continue
+  bash "$script"
+done
+

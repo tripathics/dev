@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+sudo pacman -S --noconfirm --needed hyprland hyprpaper hyprlock hyprsunset kitty waybar wofi wl-clipboard hyprshot hyprpicker polkit-gnome uwsm
+
+systemctl --user enable --now waybar.service
+systemctl --user enable --now cliphist.service
+systemctl --user enable --now hyprpaper.service
+
+# sudo pacman -S --noconfirm --needed cliphist fzf gimp vlc vlc-plugins-all firefox
+# yay -S --noconfirm --needed zsh pinta hyprpaper hyprlock google-chrome 
