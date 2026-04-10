@@ -2,3 +2,5 @@ yay --noconfirm --needed -S bob
 
 bob install latest
 
+# Install treesitter
+sudo pacman -S --noconfirm --needed tree-sitter-cli ripgrep fzf

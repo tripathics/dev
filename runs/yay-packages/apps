@@ -1,3 +1,3 @@
 sudo pacman -S --noconfirm --needed vlc vlc-plugins-all mpv firefox darktable gimp eog evince file-roller spotify-launcher
 
-yay -S --noconfirm --needed google-chrome pinta
+yay -S --noconfirm --needed google-chrome pinta nwg-look gradience

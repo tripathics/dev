@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+sudo pacman -S --noconfirm --needed gnome-keyring libsecret seahorse
+
+systemctl --user enable --now gnome-keyring-daemon.socket
+systemctl --user enable --now gnome-keyring-daemon.service
+
+echo "IMPORTANT: Make sure to update /etc/pam.d/login for auto unlock of keyring"

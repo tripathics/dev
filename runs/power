@@ -1,0 +1,19 @@
+#/usr/bin/env bash
+
+sudo pacman --noconfirm --needed -S powertop   # see what's consuming power
+sudo pacman --noconfirm --needed -S tlp        # granular power management
+
+sudo systemctl enable --now tlp                # enable tlp
+
+# save changes to disks from ram every 15sec instead of 5sec (saves power)
+# that's virtual memory writeback ;)
+echo "vm.dirty_writeback_centisecs = 1500" | sudo tee /etc/sysctl.d/99-powersave.conf
+
+# use envycontrol to use only integrated gpu instead of nvidia
+sudo pacman --noconfirm --needed -S envycontrol
+sudo envycontrol -s integrated
+
+# to start a program with nvidia graphics card
+# allows to do prime-run cmd to run that command using nvidia graphics card
+
+# sudo pacman -S nvidia-prime

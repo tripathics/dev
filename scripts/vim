@@ -9,4 +9,3 @@ if [[ $# == 0 ]]; then
 else
   nvim "$@"
 fi
-

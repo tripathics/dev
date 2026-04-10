@@ -14,6 +14,9 @@ PS1='[\u@\h \W]\$ '
 [[ -r /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
 [[ -f ~/.config/bash/keybindings.sh ]] && source ~/.config/bash/keybindings.sh
 
+# ssh-agent socket
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
 # add bob to path
 BOB_PATH="/home/shyam/.local/share/bob"
 if [ -d "$BOB_PATH" ]; then

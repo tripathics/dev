@@ -18,6 +18,7 @@
     "battery",
     "tray",
     "clock",
+    "custom/theme",
     "custom/padding"
   ],
   "custom/padding": {
@@ -40,25 +41,30 @@
     "icon": true,
     "icon-size": 18
   },
-  "tray": {
-    "icon-size": 16,
-    "spacing": 10
-  },
+  // "tray": {
+  //   "icon-size": 16,
+  //   "spacing": 10
+  // },
   "custom/music": {
     "format": "  {}",
     "escape": true,
-    "interval": 5,
     "tooltip": false,
-    "exec": "playerctl metadata --format='{{ artist }} - {{ title }}'",
+    "exec": "playerctl --follow metadata --format='{{ artist }} - {{ title }}'",
     "on-click": "playerctl play-pause",
     "max-length": 50
   },
   "custom/nightlight": {
-    // "format": "{}",
     "interval": "once",
     "exec": "~/.config/waybar/scripts/hyprsunsetctl.sh -g",
     "on-click": "~/.config/waybar/scripts/hyprsunsetctl.sh; pkill -SIGRTMIN+8 waybar",
     "signal": 8,
+    "return-type": "json"
+  },
+  "custom/theme": {
+    "interval": "once",
+    "exec": "~/.config/waybar/scripts/themectl.sh -g",
+    "on-click": "~/.config/waybar/scripts/themectl.sh; pkill -SIGRTMIN+7 waybar",
+    "signal": 7,
     "return-type": "json"
   },
   "clock": {
