@@ -1,5 +1,9 @@
 -- [[ Setting options ]]
 
+-- Use <space> as leader
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 -- Look and feel
 vim.opt.guifont = 'Lilex:h14'
 vim.opt.termguicolors = true

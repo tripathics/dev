@@ -13,3 +13,24 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
+
+--- @type Lazy
+local lazy = require('lazy')
+lazy.setup({
+  require('plugins.themes')
+}, {
+  performance = {
+    rtp = {
+     -- Stuff I don't use. (copied from maria's config
+      disabled_plugins = {
+        'gzip',
+        -- 'netrwPlugin',
+        'rplugin',
+        'tarPlugin',
+        'tohtml',
+        'tutor',
+        'zipPlugin',
+      },
+    },
+  },
+})

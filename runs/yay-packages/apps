@@ -1,3 +1,10 @@
+#!/usr/bin/env bash
+
 sudo pacman -S --noconfirm --needed vlc vlc-plugins-all mpv firefox darktable gimp eog evince file-roller spotify-launcher
 
 yay -S --noconfirm --needed google-chrome pinta nwg-look gradience
+
+# set default apps
+for mime in image/jpeg image/png image/webp image/gif image/bmp image/tiff image/svg+xml; do
+    xdg-mime default org.gnome.eog.desktop $mime
+done

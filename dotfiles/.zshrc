@@ -4,7 +4,7 @@
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
 zstyle ':completion:*' matcher-list '' '+m:{[:lower:]}={[:upper:]}'
-zstyle ':completion:*' menu select=long
+zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle :compinstall filename '/home/shyam/.zshrc'
 
@@ -19,6 +19,13 @@ setopt extendedglob
 unsetopt beep nomatch
 bindkey -e
 # End of lines configured by zsh-newuser-install
+
+####
+# Keybinds
+####
+bindkey '^[[Z' reverse-menu-complete	# shift-tab to go backwards
+# source ~/.config/bash/keybindings.sh
+eval "$(fzf --zsh)"
 
 # ssh-agent socket
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
@@ -42,6 +49,8 @@ PROMPT='%B%F{green}%~%f${vcs_info_msg_0_} %F{white}❯%f%b '
 alias edit-in-kitty='kitten edit-in-kitty'
 alias grep='grep --color=auto'
 alias ls='ls --color=auto'
+alias ll='ls --color=auto -l'
+alias la='ls --color=auto -la'
 
 ####
 # Add things to PATH
