@@ -1,13 +1,13 @@
 -- Install lazy
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  vim.fn.system { 
+  vim.fn.system {
     'git',
     'clone',
     '--filter=blob:none',
     '--branch=stable',
     'https://github.com/folke/lazy.nvim.git',
-    lazypath 
+    lazypath
   }
 end
 vim.opt.rtp:prepend(lazypath)
@@ -16,10 +16,53 @@ require 'settings'
 require 'keymaps'
 -- commands
 require 'autocmds'
+require 'lsp'
 
 require('lazy').setup({
   require('plugins.themes'),
   'tpope/vim-fugitive',
+  'nvim-treesitter/nvim-treesitter',    -- so that I can install parsers with TSInstall
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { 'nvim-telescope/telescope-ui-select.nvim' },
+    },
+    config = function ()
+      local layout_actions = require('telescope.actions.layout')
+      require('telescope').setup({
+        defaults = {
+          mappings = {
+            i = {
+              ['<C-p>'] = layout_actions.cycle_layout_next,
+              ['<C-S-p>'] = layout_actions.cycle_layout_prev,
+            }
+          }
+        },
+        extensions = {
+          ['ui-select'] = {
+            require('telescope.themes').get_ivy()
+          }
+        }
+      })
+      require('telescope').load_extension('ui-select')
+    end
+  },
+  {
+    'lewis6991/gitsigns.nvim',
+    config = function ()
+      require("gitsigns").setup({
+        on_attach = function ()
+        end
+      })
+    end
+  },
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
   { 'j-hui/fidget.nvim', opts = {} },
   {
     "folke/lazydev.nvim",
@@ -30,6 +73,14 @@ require('lazy').setup({
         -- Load luvit types when the `vim.uv` word is found
         { path = "${3rd}/luv/library", words = { "vim%.uv" } },
       },
+    },
+  },
+  {
+    'saghen/blink.cmp',
+    build = 'cargo build --release',
+    opts = {
+      keymap = { preset = 'default' },
+      fuzzy = { implementation = 'prefer_rust' },
     },
   },
 }, {
@@ -47,36 +98,6 @@ require('lazy').setup({
     },
   },
 })
-
---- need to move this later
-vim.lsp.config['lua_ls'] = {
-    cmd = { 'lua-language-server' },
-    filetypes = { 'lua' },
-    root_markers = { '.luarc.json', '.luarc.jsonc' },
-    -- NOTE: These will be merged with the configuration file.
-    settings = {
-        Lua = {
-            completion = { callSnippet = 'Replace' },
-            -- Using stylua for formatting.
-            format = { enable = false },
-            hint = {
-                enable = true,
-                arrayIndex = 'Disable',
-            },
-            runtime = {
-                version = 'LuaJIT',
-            },
-            workspace = {
-                checkThirdParty = false,
-                library = {
-                    vim.env.VIMRUNTIME,
-                    '${3rd}/luv/library',
-                },
-            },
-        },
-    },
-}
-vim.lsp.enable('lua_ls')
 
 vim.keymap.set('n', '\\', function()
   vim.cmd 'Lex!'

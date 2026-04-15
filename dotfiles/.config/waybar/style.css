@@ -93,7 +93,11 @@ window#waybar.empty #window {
 }
 
 #tray {
+  padding: 0.2rem 0.5rem;
   border-radius: 0px 5px 5px 0px;
+}
+#tray * {
+  margin: 0 0.5rem;
 }
 
 #pulseaudio {

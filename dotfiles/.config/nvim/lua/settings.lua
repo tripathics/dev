@@ -46,4 +46,3 @@ vim.opt.timeoutlen = 300
 -- searching
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-
