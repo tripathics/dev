@@ -1,3 +1,24 @@
+-- Diagnostic config
+-- local icons = require('mini.icons').get('diagnostic', 'warning' )
+-- local diagnostics_icons = {
+--     ERROR = '',
+--     WARN = '',
+--     HINT = '',
+--     INFO = '',
+-- }
+vim.schedule(function()
+  vim.diagnostic.config({
+    signs = {
+      text = {
+        ERROR = "",
+        WARN  = "",
+        INFO  = "",
+        HINT  = "󰌵",
+      },
+    },
+  })
+end)
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -7,9 +28,30 @@ local function onAttach(client_id, bufnr)
     return false
   end
 
-  -- local keymap = function ()
-  --
-  -- end
+  ---Map keys for LSP actions
+  ---@param keys string
+  ---@param func function|string
+  ---@param desc string
+  ---@param mode string|string[]|nil
+  local keymap = function (keys, func, desc, mode)
+    mode = mode or 'n'
+    vim.keymap.set(mode, keys, func, { desc = 'LSP: '..desc })
+  end
+
+  local snacks_picker = require('snacks').picker
+
+  if client:supports_method('textDocument/documentColor', bufnr) then
+    vim.lsp.document_color.enable(true, { bufnr }, { style = 'virtual' })
+  end
+
+  keymap('gd', snacks_picker.lsp_definitions, 'Peek definition')
+  if client:supports_method('textDocument/definition', bufnr) then
+    keymap('<C-]>', vim.lsp.buf.definition , 'Go to definition')
+  end
+
+  if client:supports_method('textDocument/references', bufnr) then
+    keymap('rr', snacks_picker.lsp_references, 'Find references')
+  end
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
