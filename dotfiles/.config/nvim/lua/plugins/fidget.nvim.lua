@@ -1,1 +1,1 @@
-return { 'j-hui/fidget.nvim', opts = {} }
+return { "j-hui/fidget.nvim", opts = {} }
