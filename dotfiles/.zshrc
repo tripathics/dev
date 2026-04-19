@@ -6,7 +6,7 @@ zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character t
 zstyle ':completion:*' matcher-list '' '+m:{[:lower:]}={[:upper:]}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle :compinstall filename '/home/shyam/.zshrc'
+zstyle :compinstall filename '$HOME/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -57,23 +57,29 @@ alias la='ls --color=auto -la'
 ####
 
 # add bob to path
-BOB_PATH="/home/shyam/.local/share/bob"
+BOB_PATH="$HOME/.local/share/bob"
 if [ -d "$BOB_PATH" ]; then
   export PATH="$BOB_PATH/nvim-bin:$PATH"
   source "$BOB_PATH/env/env.sh"
 fi
 
 # fnm
-FNM_PATH="/home/shyam/.local/share/fnm"
+FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env --shell bash)"
 fi
 
 # pnpm
-export PNPM_HOME="/home/shyam/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# cargo
+export CARGO_PATH="$HOME/.cargo/bin"
+if [ -d "$CARGO_PATH" ]; then
+  export PATH="$CARGO_PATH:$PATH"
+fi

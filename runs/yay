@@ -1,8 +1,10 @@
+#!/usr/bin/env bash
+
 command -v yay &>/dev/null || {
   [ -d tmp ] || mkdir tmp
   pushd tmp
   sudo pacman -S --needed git base-devel
-  git clone https://aur.archlinux.org/yay.git yay
+  [-d yay ] || git clone https://aur.archlinux.org/yay.git yay
   pushd yay
   makepkg -si --noconfirm --needed
 
