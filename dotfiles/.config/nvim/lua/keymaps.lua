@@ -26,7 +26,7 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left staying in visual mode" })
 -- cd into current file parent dir
 vim.keymap.set("n", "<leader>.", function()
     vim.cmd("cd %:p:h")
-    vim.notify(vim.fn.getcwd())
+    vim.notify("cd " .. vim.fn.getcwd(), vim.log.levels.INFO)
 end, { desc = "Change directory to the directory containing the current file" })
 
 -- buffer keymaps

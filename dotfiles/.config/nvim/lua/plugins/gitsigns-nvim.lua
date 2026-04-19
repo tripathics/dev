@@ -4,7 +4,7 @@ return {
     current_line_blame = true,
     opts = {
         on_attach = function(bufnr)
-            local gs = package.loaded.gitsigns
+            local gs = require("gitsigns")
 
             ---Map keys for working with hunks
             ---@param keys string
@@ -25,6 +25,9 @@ return {
             nmap("<leader>hr", gs.reset_hunk, "Reset hunk")
             nmap("<leader>hs", gs.stage_hunk, "Stage hunk")
             nmap("<leader>hd", gs.diffthis, "Open diff")
+            nmap("<leader>hD", function()
+                gs.diffthis("~1")
+            end, "Open diff")
         end,
     },
 }

@@ -1,19 +1,16 @@
--- Diagnostic config
-vim.schedule(function()
-    vim.diagnostic.config({
-        signs = {
-            text = {
-                ERROR = "",
-                WARN = "",
-                INFO = "",
-                HINT = "󰌵",
-            },
-        },
-    })
-end)
-
 -- Diagnostic keymaps
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+-- Diagnostic config
+vim.diagnostic.config({
+    signs = {
+        text = {
+            ERROR = "",
+            WARN = "",
+            INFO = "",
+            HINT = "󰌵",
+        },
+    },
+})
 
 --- Setup keymaps and autocmds for given buffer
 ---@param client_id integer
@@ -35,7 +32,7 @@ local function onAttach(client_id, bufnr)
         vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
     end
 
-    local snacks_picker = require("snacks").picker
+    local snacks_picker = Snacks.picker
 
     -- those color previews beside colors in say css
     if client:supports_method("textDocument/documentColor", bufnr) then
@@ -59,10 +56,10 @@ local function onAttach(client_id, bufnr)
     keymap("grD", snacks_picker.lsp_declarations, "Peek definition")
     keymap("gW", snacks_picker.lsp_workspace_symbols, "Workspace Symbols")
     keymap("gO", snacks_picker.lsp_symbols, "Document Symbols")
-    keymap("gK", function()
+    keymap("gk", function()
         local new_virtual_text = not vim.diagnostic.config().virtual_text
         vim.diagnostic.config({ virtual_text = new_virtual_text })
-    end, "Toggle diagnoistic virtual lines")
+    end, "Toggle diagnoistic virtual text")
 
     if client:supports_method("textDocument/documentHighlight") then
         local under_cursor_highlights_group =

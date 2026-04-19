@@ -1,4 +1,7 @@
 -- Picker
+
+---@module 'lazy'
+---@type LazySpec
 return {
     "folke/snacks.nvim",
     priority = 1000,
@@ -36,42 +39,49 @@ return {
         {
             "<leader><space>",
             function()
-                require("snacks").picker.buffers()
+                Snacks.picker.buffers()
             end,
             desc = "Find Buffers",
         },
         {
             "<leader>sf",
             function()
-                require("snacks").picker.files()
+                Snacks.picker.files()
             end,
             desc = "Find Files",
         },
         {
             "<leader>sn",
             function()
-                require("snacks").picker.files({ cwd = vim.fn.stdpath("config") })
+                Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
             end,
             desc = "Find nvim config",
         },
         {
             "<leader>sg",
             function()
-                require("snacks").picker.grep()
+                Snacks.picker.grep()
             end,
             desc = "Grep in files",
         },
         {
             "<leader>ss",
             function()
-                require("snacks").picker()
+                Snacks.picker()
+            end,
+            desc = "Find Pickers",
+        },
+        {
+            "<leader>sh",
+            function()
+                Snacks.picker.help()
             end,
             desc = "Find Pickers",
         },
         {
             "<leader>u",
             function()
-                require("snacks").picker.grep()
+                Snacks.picker.undo()
             end,
             desc = "Grep in files",
         },
