@@ -1,7 +1,7 @@
--- [[ Basic Keymaps ]]
 -- Clear highlights on search when pressing <Esc> in normal mode
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- [[ Windows ]]
 -- Use CTRL+<hjkl> to switch between windows
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
@@ -14,6 +14,9 @@ vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window 
 vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -4<CR>", { desc = "Decrease window width" })
 vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +4<CR>", { desc = "Increase window width" })
 
+-- tabs
+vim.keymap.set("n", "<leader>tn", "<cmd>tab split<CR>", { desc = "Split in new tab" })
+
 -- keep everything centered while scrolling
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and go to center" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and go to center" })
@@ -23,6 +26,13 @@ vim.keymap.set("v", ">", ">gv", { desc = "Indent right staying in visual mode" }
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left staying in visual mode" })
 
 -- [[ MISC ]]
+
+-- restart nvim
+vim.keymap.set("n", "<leader>R", "<cmd>restart<cr>", { desc = "Restart Neovim" })
+
+-- open package manager
+vim.keymap.set("n", "<leader>L", "<cmd>Lazy<cr>", { desc = "Open Pugin Manager" })
+
 -- cd into current file parent dir
 vim.keymap.set("n", "<leader>.", function()
     vim.cmd("cd %:p:h")

@@ -17,7 +17,11 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 vim.opt.showmode = false
+vim.opt.cmdheight = 0
+
 vim.opt.signcolumn = "yes"
+
+vim.o.scrolloff = 2
 
 vim.o.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,t:block-TermCursor"
 

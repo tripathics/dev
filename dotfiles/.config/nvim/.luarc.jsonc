@@ -20,7 +20,8 @@
       "$XDG_DATA_HOME/nvim/lazy/mini.files/lua",
       "$XDG_DATA_HOME/nvim/lazy/mini.statusline/lua",
       "$XDG_DATA_HOME/nvim/lazy/snacks.nvim/lua",
-      "$XDG_DATA_HOME/nvim/lazy/which-key.nvim/lua"
+      "$XDG_DATA_HOME/nvim/lazy/which-key.nvim/lua",
+      "$XDG_DATA_HOME/nvim/lazy/flash.nvim/lua"
     ]
   }
 }
