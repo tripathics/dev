@@ -25,6 +25,18 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and go to center" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right staying in visual mode" })
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left staying in visual mode" })
 
+-- folds
+-- Create folds in visual mode, close fold if exists in normal mode
+vim.keymap.set({ "n", "v" }, "zc", function()
+    local mode = vim.api.nvim_get_mode().mode
+    if mode:match("[vV\22]") then
+        return "zf"
+    elseif vim.fn.foldlevel(".") > 0 then
+        return "zc"
+    end
+    vim.notify("Nothing selected. Can't fold", vim.log.levels.WARN)
+end, { expr = true, desc = "Create/Close fold" })
+
 -- [[ MISC ]]
 
 -- restart nvim
