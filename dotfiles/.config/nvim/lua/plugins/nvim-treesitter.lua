@@ -1,7 +1,14 @@
 ---@module 'lazy'
 ---@type LazySpec
 return {
-    "nvim-treesitter/nvim-treesitter",
+    "tripathics/nvim-treesitter",
+    -- dir = "~/projects/nvim-treesitter",
+    -- name = "nvim-treesitter",
+    lazy = false,
+    build = ":TSUpdate",
+    opts = {
+        prefer_git = true,
+    },
     dependencies = {
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
