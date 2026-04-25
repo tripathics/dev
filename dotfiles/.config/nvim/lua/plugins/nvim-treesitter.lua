@@ -9,6 +9,42 @@ return {
     opts = {
         prefer_git = true,
     },
+    config = function(_, opts)
+        require("nvim-treesitter").setup(opts)
+
+        -- make sure the following are installed
+        require("nvim-treesitter").install({
+            "angular",
+            "bash",
+            "c",
+            "cpp",
+            "fish",
+            "gitcommit",
+            "go",
+            "graphql",
+            "html",
+            "hyprlang",
+            "java",
+            "javascript",
+            "json",
+            "json5",
+            "lua",
+            "markdown",
+            "markdown_inline",
+            "python",
+            "query",
+            "rasi",
+            "regex",
+            "rust",
+            "scss",
+            "toml",
+            "tsx",
+            "typescript",
+            "vim",
+            "vimdoc",
+            "yaml",
+        })
+    end,
     dependencies = {
         "nvim-treesitter/nvim-treesitter-context",
         opts = {
