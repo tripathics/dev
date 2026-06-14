@@ -14,7 +14,6 @@ end
 ---@type LazySpec
 return {
     "nvim-mini/mini.files",
-    dependencies = { "nvim-mini/mini.icons" },
     keys = {
         {
             "\\",
@@ -64,4 +63,23 @@ return {
             trim_right = ">",
         },
     },
+    config = function(_, opts)
+        require("mini.files").setup(opts)
+
+        -- I like rounded borders
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "MiniFilesWindowOpen",
+            callback = function(args)
+                local win_id = args.data.win_id
+
+                local config = vim.api.nvim_win_get_config(win_id)
+                config.border = "rounded"
+                vim.api.nvim_win_set_config(win_id, config)
+            end,
+        })
+
+        -- Fix background bleeding
+        vim.api.nvim_set_hl(0, "MiniFilesNormal", { bg = "NONE" })
+        vim.api.nvim_set_hl(0, "MiniFilesBorder", { bg = "NONE" })
+    end,
 }

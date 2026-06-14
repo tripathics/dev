@@ -2,12 +2,13 @@
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 -- Diagnostic config
 vim.diagnostic.config({
+    severity_sort = true,
     signs = {
         text = {
-            ERROR = "",
-            WARN = "",
-            INFO = "",
-            HINT = "󰌵",
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN] = " ",
+            [vim.diagnostic.severity.INFO] = " ",
+            [vim.diagnostic.severity.HINT] = "󰌵 ",
         },
     },
 })
@@ -32,8 +33,6 @@ local function onAttach(client_id, bufnr)
         vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
     end
 
-    local snacks_picker = Snacks.picker
-
     -- those color previews beside colors in say css
     if client:supports_method("textDocument/documentColor", bufnr) then
         vim.lsp.document_color.enable(true, { bufnr }, { style = "virtual" })
@@ -41,21 +40,22 @@ local function onAttach(client_id, bufnr)
 
     if client:supports_method("textDocument/definition", bufnr) then
         keymap("gd", function()
-            snacks_picker.lsp_definitions()
+            FzfLua.lsp_definitions({ jump1 = true })
         end, "Go to definition")
         keymap("gD", function()
-            snacks_picker.lsp_definitions({ auto_confirm = false })
+            FzfLua.lsp_definitions({ jump1 = false })
         end, "Peek definition")
     end
 
-    keymap("grn", vim.lsp.buf.rename, "Implementation")
+    keymap("grn", vim.lsp.buf.rename, "Rename")
 
-    keymap("rr", snacks_picker.lsp_references, "Find references")
-    keymap("gri", snacks_picker.lsp_implementations, "Implementation")
-    keymap("grd", snacks_picker.lsp_definitions, "Peek definition")
-    keymap("grD", snacks_picker.lsp_declarations, "Peek definition")
-    keymap("gW", snacks_picker.lsp_workspace_symbols, "Workspace Symbols")
-    keymap("gO", snacks_picker.lsp_symbols, "Document Symbols")
+    keymap("rr", FzfLua.lsp_references, "Find references")
+    keymap("gri", FzfLua.lsp_implementations, "Implementation")
+    keymap("grd", FzfLua.lsp_definitions, "Peek definition")
+    keymap("grD", FzfLua.lsp_declarations, "Peek definition")
+    keymap("gW", FzfLua.lsp_workspace_symbols, "Workspace Symbols")
+    keymap("gO", FzfLua.lsp_document_symbols, "Document Symbols")
+
     keymap("gk", function()
         local new_virtual_text = not vim.diagnostic.config().virtual_text
         vim.diagnostic.config({ virtual_text = new_virtual_text })

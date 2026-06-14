@@ -13,13 +13,10 @@ vim.opt.expandtab = true
 -- Look and feel
 vim.opt.guifont = "Lilex:h14"
 vim.opt.termguicolors = true
-vim.opt.number = true
-vim.opt.relativenumber = true
 
 vim.opt.showmode = false
-vim.opt.cmdheight = 0
 
-vim.opt.signcolumn = "yes"
+vim.wo.signcolumn = "yes"
 
 vim.o.scrolloff = 2
 
@@ -31,10 +28,22 @@ vim.opt.listchars = { tab = "» ", trail = "·" }
 vim.opt.breakindent = true
 
 -- folds
-vim.opt.foldenable = true
-vim.opt.foldlevel = 99
+-- vim.opt.foldenable = true
+-- vim.opt.foldlevel = 99
+
+vim.wo.foldcolumn = '1'
 vim.opt.foldlevelstart = 99
-vim.o.foldcolumn = 'auto'
+vim.wo.foldtext = ''
+
+vim.opt.fillchars = {
+    eob = ' ',
+    fold = ' ',
+    foldclose = '',
+    foldopen = '',
+    foldsep = ' ',
+    foldinner = ' ',
+    msgsep = '─',
+}
 
 -- how/when we split
 vim.opt.splitright = true

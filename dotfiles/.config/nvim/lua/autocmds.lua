@@ -19,3 +19,13 @@ vim.api.nvim_create_autocmd('FileType', {
         end
     end
 })
+
+-- set angular filetypes
+local angularFtGroup = vim.api.nvim_create_augroup('tripathics/angular_ft_group', { clear = true })
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    group = angularFtGroup,
+    pattern = "*.component.html",
+    callback = function ()
+        vim.bo.filetype = 'htmlangular'
+    end
+})

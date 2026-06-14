@@ -68,3 +68,13 @@ vim.keymap.set("n", "<leader>ts", function()
     vim.cmd.wincmd("J")
     vim.api.nvim_win_set_height(0, 15)
 end, { desc = "Open a [t]erminal [s]mall" })
+
+-- Toggles
+vim.keymap.set("n", "<leader>tn", function ()
+	vim.cmd("set nu!")
+	vim.cmd("set rnu!")
+end, { desc = "[T]oggle relative nu" })
+
+vim.keymap.set("n", "<leader>tw", function ()
+	vim.cmd("set wrap!")
+end, { desc = "[T]oggle word wrap" })
