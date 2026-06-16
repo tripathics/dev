@@ -23,6 +23,14 @@ return {
                     },
                 },
             },
+            lines = {
+                winopts = {
+                    preview = {
+                        layout = "vertical",
+                        vertical = "up:60%",
+                    },
+                },
+            },
 
             lsp = {
                 winopts = {
@@ -53,7 +61,10 @@ return {
         map("<leader>fn", function()
             fzf_lua.files({ cwd = vim.fn.stdpath("config") })
         end, "Find Files")
-        map("<leader>fg", fzf_lua.git_status, "FzfLua builtins")
-        map("<leader>fp", fzf_lua.builtin, "FzfLua builtins")
+        map("<leader>fg", fzf_lua.git_status, "[F]zfLua [G]it status")
+        map("<leader>fs", fzf_lua.live_grep, "[F]zfLua Live Grep [S]earch")
+        map("<leader>f.", fzf_lua.oldfiles, "[F]zfLua Old files")
+        map("<leader>/", fzf_lua.lines, "Search Lines")
+        map("<leader>fp", fzf_lua.builtin, "[F]zfLua builtins")
     end,
 }

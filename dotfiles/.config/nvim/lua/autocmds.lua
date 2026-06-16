@@ -8,24 +8,40 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- now we have to autostart treesitter ourselves
-local treesitterStartGroup = vim.api.nvim_create_augroup('tripathics/treesitter_start_group', { clear= true})
-vim.api.nvim_create_autocmd('FileType', {
+local treesitterStartGroup = vim.api.nvim_create_augroup("tripathics/treesitter_start_group", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
     group = treesitterStartGroup,
-    callback = function (args)
+    callback = function(args)
         local bufnr = args.buf
         -- again copied from maria
-        if vim.bo[bufnr].filetype ~= 'bigfile' then
+        if vim.bo[bufnr].filetype ~= "bigfile" then
             pcall(vim.treesitter.start, bufnr)
         end
-    end
+    end,
 })
 
 -- set angular filetypes
-local angularFtGroup = vim.api.nvim_create_augroup('tripathics/angular_ft_group', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+local angularFtGroup = vim.api.nvim_create_augroup("tripathics/angular_ft_group", { clear = true })
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     group = angularFtGroup,
     pattern = "*.component.html",
-    callback = function ()
-        vim.bo.filetype = 'htmlangular'
-    end
+    callback = function()
+        vim.bo.filetype = "htmlangular"
+    end,
+})
+
+local angularlsFixes = vim.api.nvim_create_augroup("tripathics/angularls_fixes", { clear = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = angularlsFixes,
+    callback = function(ev)
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+        if not client or client.name ~= "angularls" then
+            return
+        end
+
+        for _, ts_client in ipairs(vim.lsp.get_clients({ bufnr = ev.buf, name = "ts_ls" })) do
+            ts_client.server_capabilities.referencesProvider = false
+            ts_client.server_capabilities.renameProvider = false
+        end
+    end,
 })
