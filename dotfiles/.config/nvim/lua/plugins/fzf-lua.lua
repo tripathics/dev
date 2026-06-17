@@ -56,15 +56,56 @@ return {
             vim.keymap.set(mode, keys, func, { desc = desc })
         end
 
-        map("<leader><space>", fzf_lua.buffers, "Find Buffers")
-        map("<leader>ff", fzf_lua.files, "Find Files")
+        map("<leader><space>", FzfLua.buffers, "Find Buffers")
+        map("<leader>ff", FzfLua.files, "Find Files")
         map("<leader>fn", function()
-            fzf_lua.files({ cwd = vim.fn.stdpath("config") })
+            FzfLua.files({ cwd = vim.fn.stdpath("config") })
         end, "Find Files")
-        map("<leader>fg", fzf_lua.git_status, "[F]zfLua [G]it status")
-        map("<leader>fs", fzf_lua.live_grep, "[F]zfLua Live Grep [S]earch")
-        map("<leader>f.", fzf_lua.oldfiles, "[F]zfLua Old files")
-        map("<leader>/", fzf_lua.lines, "Search Lines")
-        map("<leader>fp", fzf_lua.builtin, "[F]zfLua builtins")
+        map("<leader>fg", FzfLua.git_status, "[F]zfLua [G]it status")
+        map("<leader>fh", FzfLua.help_tags, "[F]zfLua [H]elp tags")
+        map("<leader>fr", FzfLua.resume, "[F]zfLua [R]esume")
+        map("<leader>fs", FzfLua.live_grep, "[F]zfLua Live Grep [S]earch")
+        map("<leader>f.", FzfLua.oldfiles, "[F]zfLua Old files")
+        map("<leader>/", FzfLua.lines, "Search Lines")
+        map("<leader>fp", FzfLua.builtin, "[F]zfLua builtins")
+
+        local fzfLuaLspKeysGroup = vim.api.nvim_create_augroup("tripathics/fzf-lua-lsp-keys-group", { clear = true })
+        vim.api.nvim_create_autocmd("LspAttach", {
+            group = fzfLuaLspKeysGroup,
+            callback = function (ev)
+                local client = vim.lsp.get_client_by_id(ev.data.client_id)
+                local bufnr = ev.buf
+
+                if not client then
+                    return
+                end
+
+                ---Map keys for LSP actions
+                ---@param keys string
+                ---@param func function|string
+                ---@param desc string
+                ---@param mode string|string[]|nil
+                local keymap = function(keys, func, desc, mode)
+                    mode = mode or "n"
+                    vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
+                end
+
+                if client:supports_method("textDocument/definition", bufnr) then
+                    keymap("gd", function()
+                        FzfLua.lsp_definitions({ jump1 = true })
+                    end, "Go to definition")
+                    keymap("gD", function()
+                        FzfLua.lsp_definitions({ jump1 = false })
+                    end, "Peek definition")
+                end
+
+                keymap("rr", FzfLua.lsp_references, "Find references")
+                keymap("gri", FzfLua.lsp_implementations, "Implementation")
+                keymap("grd", FzfLua.lsp_definitions, "Peek definition")
+                keymap("grD", FzfLua.lsp_declarations, "Peek definition")
+                keymap("gW", FzfLua.lsp_workspace_symbols, "Workspace Symbols")
+                keymap("gO", FzfLua.lsp_document_symbols, "Document Symbols")
+            end
+        })
     end,
 }

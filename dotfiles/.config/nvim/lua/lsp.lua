@@ -38,23 +38,7 @@ local function onAttach(client_id, bufnr)
         vim.lsp.document_color.enable(true, { bufnr }, { style = "virtual" })
     end
 
-    if client:supports_method("textDocument/definition", bufnr) then
-        keymap("gd", function()
-            FzfLua.lsp_definitions({ jump1 = true })
-        end, "Go to definition")
-        keymap("gD", function()
-            FzfLua.lsp_definitions({ jump1 = false })
-        end, "Peek definition")
-    end
-
     keymap("grn", vim.lsp.buf.rename, "Rename")
-
-    keymap("rr", FzfLua.lsp_references, "Find references")
-    keymap("gri", FzfLua.lsp_implementations, "Implementation")
-    keymap("grd", FzfLua.lsp_definitions, "Peek definition")
-    keymap("grD", FzfLua.lsp_declarations, "Peek definition")
-    keymap("gW", FzfLua.lsp_workspace_symbols, "Workspace Symbols")
-    keymap("gO", FzfLua.lsp_document_symbols, "Document Symbols")
 
     keymap("gk", function()
         local new_virtual_text = not vim.diagnostic.config().virtual_text
