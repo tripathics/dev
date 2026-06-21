@@ -62,10 +62,21 @@ local function collect_node_modules(root_dir)
   local ngserver_exe = fn.exepath('ngserver')
   if ngserver_exe and #ngserver_exe > 0 then
     local realpath = uv.fs_realpath(ngserver_exe) or ngserver_exe
-    realpath = resolve_cmd_shim(realpath)
-    local candidate = fs.normalize(fs.joinpath(fs.dirname(realpath), '../../..'))
-    if uv.fs_stat(candidate) then
-      table.insert(results, candidate)
+    if realpath:match("pnpm") then
+      local result = vim.system({ 'pnpm', 'root', '-g' }, { text = true }):wait()
+
+      if result.code == 0 then
+        local pnpm_root = vim.trim(result.stdout)
+        if uv.fs_stat(pnpm_root) then
+          table.insert(results, pnpm_root)
+        end
+      end
+    else
+      realpath = resolve_cmd_shim(realpath)
+      local candidate = fs.normalize(fs.joinpath(fs.dirname(realpath), '../../..'))
+      if uv.fs_stat(candidate) then
+        table.insert(results, candidate)
+      end
     end
   end
 

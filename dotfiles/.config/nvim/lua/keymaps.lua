@@ -57,6 +57,10 @@ vim.keymap.set("n", "<C-w>c", "<cmd>hide<CR>", { desc = "[C]lose window" })
 -- Terminal keymaps
 TERM = vim.uv.os_uname().sysname ~= "Linux" and "bash" or nil
 
+-- treesitter keymaps
+vim.keymap.set("x", "+", "an", { remap = true, desc = "Treesitter: Expand selection"})
+vim.keymap.set("x", "-", "in", { remap = true, desc = "Treesitter: Expand selection"})
+
 vim.keymap.set("n", "<leader>tt", function()
     vim.cmd.tabnew()
     vim.cmd.term(TERM)

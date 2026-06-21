@@ -1,6 +1,89 @@
 local isWindows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
 local isLinux = vim.fn.has("linux") == 1
 
+---@class PickerActions
+---@field buffers fun(opts?: table)
+---@field files fun(opts?: table)
+---@field git_status fun(opts?: table)
+---@field help_tags fun(opts?: table)
+---@field resume fun(opts?: table)
+---@field live_grep fun(opts?: table)
+---@field oldfiles fun(opts?: table)
+---@field blines fun(opts?: table)
+---@field builtin fun(opts?: table)
+---@field undotree fun(opts?: table)
+---@field lsp_definitions fun(opts?: table)
+---@field lsp_references fun(opts?: table)
+---@field lsp_implementations fun(opts?: table)
+---@field lsp_declarations fun(opts?: table)
+---@field lsp_workspace_symbols fun(opts?: table)
+---@field lsp_document_symbols fun(opts?: table)
+---
+---@param pickers PickerActions
+local function picker_keymaps(pickers)
+    ---@param keys string
+    ---@param func function|string
+    ---@param desc string
+    ---@param mode string|string[]|nil
+    local map = function(keys, func, desc, mode)
+        mode = mode or "n"
+        vim.keymap.set(mode, keys, func, { desc = desc })
+    end
+
+    map("<leader><space>", pickers.buffers, "Find Buffers")
+    map("<leader>ff", pickers.files, "[F]ind Files")
+    map("<leader>fn", function()
+        pickers.files({ cwd = vim.fn.stdpath("config") })
+    end, "Find Files")
+    map("<leader>fg", pickers.git_status, "[F]ind [G]it status")
+    map("<leader>fh", pickers.help_tags, "[F]ind [H]elp tags")
+    map("<leader>fr", pickers.resume, "[F]ind [R]esume")
+    map("<leader>fs", pickers.live_grep, "[F]ind Live Grep [S]earch")
+    map("<leader>f.", pickers.oldfiles, "[F]ind Old files")
+    map("<leader>/", pickers.blines, "Search Buf Lines")
+    map("<leader>fp", pickers.builtin, "[F]ind builtins")
+    map("<leader>u", pickers.undotree, "[F]ind [U]ndotree")
+
+    local lspKeysGroup = vim.api.nvim_create_augroup("tripathics/lsp-keys-group", { clear = true })
+    vim.api.nvim_create_autocmd("LspAttach", {
+        group = lspKeysGroup,
+        callback = function(ev)
+            local client = vim.lsp.get_client_by_id(ev.data.client_id)
+            local bufnr = ev.buf
+
+            if not client then
+                return
+            end
+
+            ---Map keys for LSP actions
+            ---@param keys string
+            ---@param func function|string
+            ---@param desc string
+            ---@param mode string|string[]|nil
+            local keymap = function(keys, func, desc, mode)
+                mode = mode or "n"
+                vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
+            end
+
+            if client:supports_method("textDocument/definition", bufnr) then
+                keymap("gd", function()
+                    pickers.lsp_definitions({ jump1 = true })
+                end, "Go to definition")
+                keymap("gD", function()
+                    pickers.lsp_definitions({ jump1 = false })
+                end, "Peek definition")
+            end
+
+            keymap("rr", pickers.lsp_references, "Find references")
+            keymap("gri", pickers.lsp_implementations, "Implementation")
+            keymap("grd", pickers.lsp_definitions, "Find definitions")
+            keymap("grD", pickers.lsp_declarations, "Find declarations")
+            keymap("gW", pickers.lsp_workspace_symbols, "Workspace Symbols")
+            keymap("gO", pickers.lsp_document_symbols, "Document Symbols")
+        end,
+    })
+end
+
 return {
     {
         "ibhagwan/fzf-lua",
@@ -23,7 +106,7 @@ return {
                         },
                     },
                 },
-                lines = {
+                blines = {
                     winopts = {
                         preview = {
                             layout = "vertical",
@@ -47,67 +130,7 @@ return {
 
             fzf_lua.register_ui_select()
 
-            ---@param keys string
-            ---@param func function|string
-            ---@param desc string
-            ---@param mode string|string[]|nil
-            local map = function(keys, func, desc, mode)
-                mode = mode or "n"
-                vim.keymap.set(mode, keys, func, { desc = desc })
-            end
-
-            map("<leader><space>", FzfLua.buffers, "Find Buffers")
-            map("<leader>ff", FzfLua.files, "Find Files")
-            map("<leader>fn", function()
-                FzfLua.files({ cwd = vim.fn.stdpath("config") })
-            end, "Find Files")
-            map("<leader>fg", FzfLua.git_status, "[F]zfLua [G]it status")
-            map("<leader>fh", FzfLua.help_tags, "[F]zfLua [H]elp tags")
-            map("<leader>fr", FzfLua.resume, "[F]zfLua [R]esume")
-            map("<leader>fs", FzfLua.live_grep, "[F]zfLua Live Grep [S]earch")
-            map("<leader>f.", FzfLua.oldfiles, "[F]zfLua Old files")
-            map("<leader>/", FzfLua.lines, "Search Lines")
-            map("<leader>fp", FzfLua.builtin, "[F]zfLua builtins")
-
-            local fzfLuaLspKeysGroup =
-                vim.api.nvim_create_augroup("tripathics/fzf-lua-lsp-keys-group", { clear = true })
-            vim.api.nvim_create_autocmd("LspAttach", {
-                group = fzfLuaLspKeysGroup,
-                callback = function(ev)
-                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-                    local bufnr = ev.buf
-
-                    if not client then
-                        return
-                    end
-
-                    ---Map keys for LSP actions
-                    ---@param keys string
-                    ---@param func function|string
-                    ---@param desc string
-                    ---@param mode string|string[]|nil
-                    local keymap = function(keys, func, desc, mode)
-                        mode = mode or "n"
-                        vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
-                    end
-
-                    if client:supports_method("textDocument/definition", bufnr) then
-                        keymap("gd", function()
-                            FzfLua.lsp_definitions({ jump1 = true })
-                        end, "Go to definition")
-                        keymap("gD", function()
-                            FzfLua.lsp_definitions({ jump1 = false })
-                        end, "Peek definition")
-                    end
-
-                    keymap("rr", FzfLua.lsp_references, "Find references")
-                    keymap("gri", FzfLua.lsp_implementations, "Implementation")
-                    keymap("grd", FzfLua.lsp_definitions, "Peek definition")
-                    keymap("grD", FzfLua.lsp_declarations, "Peek definition")
-                    keymap("gW", FzfLua.lsp_workspace_symbols, "Workspace Symbols")
-                    keymap("gO", FzfLua.lsp_document_symbols, "Document Symbols")
-                end,
-            })
+            picker_keymaps(FzfLua)
         end,
     },
     {
@@ -164,77 +187,29 @@ return {
 
             -- See `:help telescope.builtin`
             local builtin = require("telescope.builtin")
-            vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "[S]earch [H]elp" })
-            vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[S]earch [F]iles" })
-            vim.keymap.set("n", "<leader>fp", builtin.builtin, { desc = "[S]earch [S]elect Telescope" })
-            -- vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-            vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "[S]earch by [G]rep" })
-            -- vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-            vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "[S]earch [R]esume" })
-            vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
-            vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
-
-            -- Slightly advanced example of overriding default behavior and theme
-            vim.keymap.set("n", "<leader>/", function()
-                -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-                builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-                    winblend = 10,
-                    previewer = false,
-                }))
-            end, { desc = "[/] Fuzzily search in current buffer" })
-
-            -- It's also possible to pass additional configuration options.
-            --  See `:help telescope.builtin.live_grep()` for information about particular keys
-            -- vim.keymap.set('n', '<leader>s/', function()
-            --   builtin.live_grep {
-            --     grep_open_files = true,
-            --     prompt_title = 'Live Grep in Open Files',
-            --   }
-            -- end, { desc = '[S]earch [/] in Open Files' })
-
-            -- Shortcut for searching your Neovim configuration files
-            vim.keymap.set("n", "<leader>fn", function()
-                builtin.find_files({ cwd = vim.fn.stdpath("config") })
-            end, { desc = "[S]earch [N]eovim files" })
-
-            local telescopeLspKeysGroup =
-                vim.api.nvim_create_augroup("tripathics/telescope-lsp-keys-group", { clear = true })
-            vim.api.nvim_create_autocmd("LspAttach", {
-                group = telescopeLspKeysGroup,
-                callback = function(ev)
-                    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-                    local bufnr = ev.buf
-
-                    if not client then
-                        return
-                    end
-
-                    ---Map keys for LSP actions
-                    ---@param keys string
-                    ---@param func function|string
-                    ---@param desc string
-                    ---@param mode string|string[]|nil
-                    local keymap = function(keys, func, desc, mode)
-                        mode = mode or "n"
-                        vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
-                    end
-
-                    if client:supports_method("textDocument/definition", bufnr) then
-                        keymap("gd", function()
-                            builtin.lsp_definitions({ jump1 = true })
-                        end, "Go to definition")
-                        keymap("gD", function()
-                            builtin.lsp_definitions({ jump1 = false })
-                        end, "Peek definition")
-                    end
-
-                    keymap("rr", builtin.lsp_references, "Find references")
-                    keymap("gri", builtin.lsp_implementations, "Implementation")
-                    keymap("grd", builtin.lsp_definitions, "Peek definition")
-                    -- keymap("grD", builtin.lsp_declarations, "Peek definition")
-                    keymap("gW", builtin.lsp_workspace_symbols, "Workspace Symbols")
-                    keymap("gO", builtin.lsp_document_symbols, "Document Symbols")
+            picker_keymaps({
+                blines = function()
+                    -- You can pass additional configuration to Telescope to change the theme, layout, etc.
+                    builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+                        winblend = 10,
+                        previewer = false,
+                    }))
                 end,
+                buffers = builtin.buffers,
+                builtin = builtin.builtin,
+                files = builtin.find_files,
+                live_grep = builtin.live_grep,
+                git_status = builtin.git_status,
+                help_tags = builtin.help_tags,
+                oldfiles = builtin.oldfiles,
+                resume = builtin.resume,
+                undotree = builtin.undotree,
+                lsp_references = builtin.lsp_references,
+                lsp_definitions = builtin.lsp_definitions,
+                lsp_document_symbols = builtin.lsp_document_symbols,
+                lsp_workspace_symbols = builtin.lsp_workspace_symbols,
+                lsp_implementations = builtin.lsp_implementations,
+                lsp_declarations = function () end
             })
         end,
     },

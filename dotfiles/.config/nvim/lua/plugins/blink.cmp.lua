@@ -16,8 +16,7 @@ return {
         completion = {
             accept = { auto_brackets = { enabled = false } },
             documentation = {
-                auto_show = true,
-                auto_show_delay_ms = 500,
+                auto_show = false,
                 treesitter_highlighting = false,
             },
             menu = {
@@ -29,8 +28,10 @@ return {
                 },
             },
         },
-        sources = {
-            default = { "lsp", "path", "snippets" },
+        signature = {
+            enabled = true,
+            trigger = { enabled = false },
         },
+        sources = { default = { "lsp", "path", "snippets" } },
     },
 }

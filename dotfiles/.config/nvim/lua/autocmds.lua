@@ -41,7 +41,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
         for _, ts_client in ipairs(vim.lsp.get_clients({ bufnr = ev.buf, name = "ts_ls" })) do
             ts_client.server_capabilities.referencesProvider = false
-            ts_client.server_capabilities.renameProvider = false
         end
     end,
 })

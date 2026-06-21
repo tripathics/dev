@@ -17,7 +17,6 @@ return {
     {
         "rose-pine/neovim",
         name = "rose-pine",
-        priority = 1000,
     },
     {
         "catppuccin/nvim",
@@ -28,7 +27,7 @@ return {
     {
         "rebelot/kanagawa.nvim",
         config = function()
-            vim.cmd.colorscheme("kanagawa-dragon")
+            vim.cmd.colorscheme("kanagawa")
         end,
     },
     { "nvim-mini/mini.base16" },

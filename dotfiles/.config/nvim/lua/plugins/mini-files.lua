@@ -10,6 +10,19 @@ local toggle_minifiles = function(path, use_latest, opts)
     end
 end
 
+---cd into current branch depth
+local cd_current_branch_depth = function()
+    local MiniFiles = require("mini.files")
+
+    local explorer_state = MiniFiles.get_explorer_state()
+    if explorer_state == nil then
+        return
+    end
+    local path = explorer_state.branch[explorer_state.depth_focus]
+    vim.cmd("cd " .. path)
+    vim.notify("cd " .. vim.fn.getcwd(), vim.log.levels.INFO)
+end
+
 ---@module 'lazy'
 ---@type LazySpec
 return {
@@ -29,6 +42,11 @@ return {
                 toggle_minifiles(path)
             end,
             desc = "File explorer in current buf directory",
+        },
+        {
+            ".",
+            cd_current_branch_depth,
+            desc = "cd into current directory",
         },
     },
     opts = {

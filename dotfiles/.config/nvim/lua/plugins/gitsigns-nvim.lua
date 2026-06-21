@@ -1,7 +1,8 @@
+---@module 'lazy'
+---@type LazySpec
 return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    current_line_blame = true,
     opts = {
         on_attach = function(bufnr)
             local gs = require("gitsigns")
@@ -14,20 +15,22 @@ return {
                 vim.keymap.set("n", keys, func, { desc = "GitSigns: " .. desc, buf = bufnr })
             end
 
-            nmap("[c", function()
-                gs.nav_hunk("prev")
-            end, "Prev git change")
-            nmap("]c", function()
-                gs.nav_hunk("next")
-            end, "Next git change")
-            nmap("<leader>hb", gs.blame, "Open Blame")
-            nmap("<leader>hp", gs.preview_hunk, "Preview hunk")
-            nmap("<leader>hr", gs.reset_hunk, "Reset hunk")
-            nmap("<leader>hs", gs.stage_hunk, "Stage hunk")
-            nmap("<leader>hd", gs.diffthis, "Open diff")
+            nmap("[c", function() gs.nav_hunk("prev") end, "Prev git change")
+            nmap("]c", function() gs.nav_hunk("next") end, "Next git change")
+
+            -- blame
+            nmap("<leader>ht", gs.toggle_current_line_blame, "[T]oggle current line blame")
+            nmap("<leader>hb", gs.blame_line, "[B]lame line")
+            nmap("<leader>hB", gs.blame, "[B]lame")
+
+            -- hunks
+            nmap("<leader>hp", gs.preview_hunk, "[H]unk [p]review")
+            nmap("<leader>hr", gs.reset_hunk, "[H]unk [r]eset")
+            nmap("<leader>hs", gs.stage_hunk, "[H]unk [s]tage")
+            nmap("<leader>hd", gs.diffthis, "[D]iff against index")
             nmap("<leader>hD", function()
                 gs.diffthis("~1")
-            end, "Open diff")
+            end, "[D]iff against last commit")
         end,
     },
 }

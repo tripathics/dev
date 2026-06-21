@@ -15,6 +15,7 @@ vim.opt.guifont = "Lilex:h14"
 vim.opt.termguicolors = true
 
 vim.opt.showmode = false
+vim.opt.cmdheight = 0
 
 vim.wo.signcolumn = "yes"
 
