@@ -24,7 +24,9 @@
       "$XDG_DATA_HOME/nvim/lazy/snacks.nvim/lua",
       "$XDG_DATA_HOME/nvim/lazy/which-key.nvim/lua",
       "$XDG_DATA_HOME/nvim/lazy/flash.nvim/lua",
-      "$XDG_DATA_HOME/nvim/lazy/fzf-lua/lua"
+      "$XDG_DATA_HOME/nvim/lazy/fzf-lua/lua",
+      "$XDG_DATA_HOME/nvim/lazy/telescope.nvim/lua",
+      "$XDG_DATA_HOME/nvim/lazy/everforest-nvim/lua"
     ]
   }
 }

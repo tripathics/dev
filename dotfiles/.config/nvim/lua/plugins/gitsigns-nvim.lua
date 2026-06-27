@@ -23,10 +23,12 @@ return {
             nmap("<leader>hb", gs.blame_line, "[B]lame line")
             nmap("<leader>hB", gs.blame, "[B]lame")
 
-            -- hunks
+            -- hunks and buffers
             nmap("<leader>hp", gs.preview_hunk, "[H]unk [p]review")
             nmap("<leader>hr", gs.reset_hunk, "[H]unk [r]eset")
+            nmap("<leader>hR", gs.reset_buffer, "[R]eset buffer")
             nmap("<leader>hs", gs.stage_hunk, "[H]unk [s]tage")
+            nmap("<leader>hS", gs.stage_buffer, "[S]tage buffer")
             nmap("<leader>hd", gs.diffthis, "[D]iff against index")
             nmap("<leader>hD", function()
                 gs.diffthis("~1")

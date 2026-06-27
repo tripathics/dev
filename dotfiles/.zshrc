@@ -48,7 +48,7 @@ PROMPT='%B%F{green}%~%f${vcs_info_msg_0_} %F{white}❯%f%b '
 ####
 alias edit-in-kitty='kitten edit-in-kitty'
 alias grep='grep --color=auto'
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --hyperlink=auto'
 alias ll='ls --color=auto -l'
 alias la='ls --color=auto -la'
 

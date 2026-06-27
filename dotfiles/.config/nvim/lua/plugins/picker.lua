@@ -130,7 +130,24 @@ return {
 
             fzf_lua.register_ui_select()
 
-            picker_keymaps(FzfLua)
+            picker_keymaps({
+                blines = FzfLua.blines,
+                buffers = FzfLua.buffers,
+                builtin = FzfLua.builtin,
+                files = FzfLua.files,
+                oldfiles = FzfLua.oldfiles,
+                resume = FzfLua.resume,
+                undotree = FzfLua.undotree,
+                git_status = FzfLua.git_status,
+                help_tags = FzfLua.help_tags,
+                live_grep = FzfLua.live_grep,
+                lsp_declarations = FzfLua.lsp_declarations,
+                lsp_definitions = FzfLua.lsp_definitions,
+                lsp_document_symbols = FzfLua.lsp_document_symbols,
+                lsp_implementations = FzfLua.lsp_implementations,
+                lsp_references = FzfLua.lsp_references,
+                lsp_workspace_symbols = FzfLua.lsp_workspace_symbols,
+            })
         end,
     },
     {
@@ -187,17 +204,22 @@ return {
 
             -- See `:help telescope.builtin`
             local builtin = require("telescope.builtin")
+            local themes = require("telescope.themes")
             picker_keymaps({
                 blines = function()
                     -- You can pass additional configuration to Telescope to change the theme, layout, etc.
-                    builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
+                    builtin.current_buffer_fuzzy_find(themes.get_dropdown({
                         winblend = 10,
                         previewer = false,
                     }))
                 end,
                 buffers = builtin.buffers,
                 builtin = builtin.builtin,
-                files = builtin.find_files,
+                files = function ()
+                    builtin.find_files(themes.get_dropdown({
+                        previewer = false,
+                    }))
+                end,
                 live_grep = builtin.live_grep,
                 git_status = builtin.git_status,
                 help_tags = builtin.help_tags,
