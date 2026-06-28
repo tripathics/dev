@@ -225,7 +225,10 @@ return {
                 help_tags = builtin.help_tags,
                 oldfiles = builtin.oldfiles,
                 resume = builtin.resume,
-                undotree = builtin.undotree,
+                undotree = function ()  -- telescope don't have builtin undotree
+                    vim.cmd("packadd undotree")
+                    vim.cmd("Undotree")
+                end,
                 lsp_references = builtin.lsp_references,
                 lsp_definitions = builtin.lsp_definitions,
                 lsp_document_symbols = builtin.lsp_document_symbols,
