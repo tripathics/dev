@@ -41,7 +41,10 @@ return {
 
                     -- nvim-treesitter/nvim-treesitter-context
                     hl.TreesitterContext = { bg = palette.bg2 }
-                    hl.TreesitterContextBottom = { bg = palette.bg2, underline = true, sp = palette.bg5 }
+                    hl.TreesitterContextBottom = { bg = palette.bg2, underline = true, sp = palette.grey0 }
+
+                    -- diagnostics
+                    hl.DiagnosticUnderlineHint = { undercurl = true, sp = palette.purple, fg = palette.none }
                 end,
             }
             require("everforest").setup(opts)

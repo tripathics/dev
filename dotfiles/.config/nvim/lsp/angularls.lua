@@ -131,4 +131,6 @@ return {
 
   filetypes = { 'typescript', 'html', 'typescriptreact', 'htmlangular' },
   root_markers = { 'angular.json', 'nx.json' },
+
+  workspace_required = true,
 }
