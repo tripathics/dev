@@ -4,7 +4,11 @@ return {
     "folke/flash.nvim",
     event = "VeryLazy",
     ---@type Flash.Config
-    opts = {},
+    opts = {
+        search = {
+            multi_window = false,
+        },
+    },
     keys = {
         {
             "s",
