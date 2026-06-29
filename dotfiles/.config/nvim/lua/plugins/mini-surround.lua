@@ -5,12 +5,12 @@ return {
     opts = {
         ---@module 'mini.surround'
         mappings = {
-            add = "gsa",
-            delete = "gsd",
-            find = "gsf", -- Find surrounding (to the right)
-            find_left = "gsF", -- Find surrounding (to the left)
-            highlight = "gsh", -- Highlight surrounding
-            replace = "gsr", -- Replace surrounding
+            add = "<leader>sa",
+            delete = "<leader>sd",
+            find = "<leader>sf", -- Find surrounding (to the right)
+            find_left = "<leader>sF", -- Find surrounding (to the left)
+            highlight = "<leader>sh", -- Highlight surrounding
+            replace = "<leader>sr", -- Replace surrounding
           -- suffix_last = 'l', -- Suffix to search with "prev" method
           -- suffix_next = 'n', -- Suffix to search with "next" method
         },

@@ -47,6 +47,10 @@ return {
     end,
     dependencies = {
         "nvim-treesitter/nvim-treesitter-context",
+        ---@module 'treesitter-context'
+        ---@type TSContext.Config
+        ---
+        ---@diagnostic disable:missing-fields
         opts = {
             -- Avoid the sticky context from growing a lot.
             max_lines = 3,
@@ -54,6 +58,7 @@ return {
             multiline_threshold = 1,
             -- Disable it when the window is too small.
             min_window_height = 20,
+            line_numbers = false
         },
         keys = {
             {

@@ -215,17 +215,13 @@ return {
                 end,
                 buffers = builtin.buffers,
                 builtin = builtin.builtin,
-                files = function ()
-                    builtin.find_files(themes.get_dropdown({
-                        previewer = false,
-                    }))
-                end,
+                files = builtin.find_files,
                 live_grep = builtin.live_grep,
                 git_status = builtin.git_status,
                 help_tags = builtin.help_tags,
                 oldfiles = builtin.oldfiles,
                 resume = builtin.resume,
-                undotree = function ()  -- telescope don't have builtin undotree
+                undotree = function() -- telescope don't have builtin undotree
                     vim.cmd("packadd undotree")
                     vim.cmd("Undotree")
                 end,
@@ -234,7 +230,7 @@ return {
                 lsp_document_symbols = builtin.lsp_document_symbols,
                 lsp_workspace_symbols = builtin.lsp_workspace_symbols,
                 lsp_implementations = builtin.lsp_implementations,
-                lsp_declarations = function () end
+                lsp_declarations = function() end,
             })
         end,
     },

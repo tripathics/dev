@@ -39,8 +39,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
             return
         end
 
-        for _, ts_client in ipairs(vim.lsp.get_clients({ bufnr = ev.buf, name = "ts_ls" })) do
-            ts_client.server_capabilities.referencesProvider = false
+        -- potential clients
+        local ts_clients = {
+            ts_ls= true,
+            vtsls = true,
+        }
+
+        for _, cl in ipairs(vim.lsp.get_clients({ bufnr = ev.buf })) do
+            if ts_clients[cl.name] then
+                cl.server_capabilities.referencesProvider = false
+            end
         end
     end,
 })

@@ -14,6 +14,8 @@ return {
         require("conform").setup({
             formatters_by_ft = {
                 lua = { "stylua" },
+                htmlangular = { "prettier" },
+                html = { "prettier" },
             },
             default_format_opts = {
                 lsp_format = "fallback",

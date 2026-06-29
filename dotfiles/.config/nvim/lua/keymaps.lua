@@ -75,8 +75,13 @@ end, { desc = "Open a [t]erminal [s]mall" })
 
 -- Toggles
 vim.keymap.set("n", "<leader>tn", function ()
-	vim.cmd("set nu!")
-	vim.cmd("set rnu!")
+    if vim.o.nu then
+        vim.cmd("set nonu")
+        vim.cmd("set nornu")
+    else
+        vim.cmd("set nu")
+        vim.cmd("set rnu")
+    end
 end, { desc = "[T]oggle relative nu" })
 
 vim.keymap.set("n", "<leader>tw", function ()

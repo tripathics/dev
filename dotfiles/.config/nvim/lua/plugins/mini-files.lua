@@ -21,6 +21,7 @@ local cd_current_branch_depth = function()
     local path = explorer_state.branch[explorer_state.depth_focus]
     vim.cmd("cd " .. path)
     vim.notify("cd " .. vim.fn.getcwd(), vim.log.levels.INFO)
+    MiniFiles.close()
 end
 
 ---@module 'lazy'
