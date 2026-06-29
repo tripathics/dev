@@ -34,8 +34,8 @@ local angularlsFixes = vim.api.nvim_create_augroup("tripathics/angularls_fixes",
 vim.api.nvim_create_autocmd("LspAttach", {
     group = angularlsFixes,
     callback = function(ev)
-        local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        if not client or client.name ~= "angularls" then
+        local angularls_clients = vim.lsp.get_clients({ bufnr = ev.buf, name = "angularls" })
+        if #angularls_clients == 0 then
             return
         end
 
