@@ -2,5 +2,6 @@
 ---@type LazySpec
 return {
     "nvim-mini/mini.ai",
-    event = "BufReadPre"
+    event = "BufReadPre",
+    opts = {},
 }

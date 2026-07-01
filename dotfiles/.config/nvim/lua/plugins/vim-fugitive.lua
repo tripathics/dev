@@ -23,10 +23,20 @@ return {
                 vim.keymap.set("n", "<leader>p", ":Git push -u origin ", vim.tbl_extend("force", opts, { desc = "Fugitive: push command" }))
             end,
         })
+
+        ---@param lhs string
+        ---@param rhs function|string
+        ---@param desc string
+        ---@param mode string|string[]|nil
+        local function map(lhs, rhs, desc, mode)
+            mode = mode or "n"
+            vim.keymap.set("n", lhs, rhs, { desc = desc })
+        end
+
+        map("<leader>gs", vim.cmd.Git, "[G]it status")
+        map("<leader>gd", "<cmd>Gvdiffsplit!<CR>",  "[G]it [d]iff this")
+        map("<leader>gD", "<cmd>Gvdiffsplit HEAD~1 ",  "[G]it [D]iff command")
+        map("gu", "<cmd>diffget //2<CR>", "[G]it ours")
+        map("gh", "<cmd>diffget //3<CR>",  "[G]et theirs")
     end,
-    keys = {
-        { "gs", vim.cmd.Git,  { desc = "[G]it status" }},
-        { "gu", "<cmd>diffget //2<CR>",  { desc = "[G]et ours" }},
-        { "gh", "<cmd>diffget //3<CR>",  { desc = "[G]et theirs" }}
-    }
 }
