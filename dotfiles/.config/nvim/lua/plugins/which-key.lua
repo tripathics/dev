@@ -44,11 +44,11 @@ return { -- Useful plugin to show you pending keybinds.
 
         -- Document existing key chains
         spec = {
-            { "<leader>f", group = "[F]ind" },
+            { "<leader>f", group = "Find" },
             { "<leader>s", group = "mini.ai [S]urround" },
             { "<leader>t", group = "[T]oggle" },
             { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
-            { "<leader>g", group = "[G]it", mode = { "n" } },
+            { "<leader>g", group = "Git", mode = { "n" } },
         },
     },
 }

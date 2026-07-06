@@ -34,8 +34,9 @@ return {
         end
 
         map("<leader>gs", vim.cmd.Git, "[G]it status")
+        map("<leader>gc", "<cmd>0Gclog!<CR>",  "[G]it [l]og this file")
         map("<leader>gd", "<cmd>Gvdiffsplit!<CR>",  "[G]it [d]iff this")
-        map("<leader>gD", "<cmd>Gvdiffsplit HEAD~1 ",  "[G]it [D]iff command")
+        map("<leader>gD", ":Gvdiffsplit HEAD~1 ",  "[G]it [D]iff command")
         map("gu", "<cmd>diffget //2<CR>", "[G]it ours")
         map("gh", "<cmd>diffget //3<CR>",  "[G]et theirs")
     end,
