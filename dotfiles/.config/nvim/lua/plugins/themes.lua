@@ -35,9 +35,9 @@ return {
                 background = "hard",
                 italics = true,
                 on_highlights = function(hl, palette)
-                    hl.LspReferenceText = { bg = palette.bg2 }
-                    hl.LspReferenceRead = { bg = palette.bg2 }
-                    hl.LspReferenceWrite = { bg = palette.bg2, underline = true }
+                    hl.LspReferenceText = { bg = palette.bg1 }
+                    hl.LspReferenceRead = { bg = palette.bg1 }
+                    hl.LspReferenceWrite = { bg = palette.bg1, underline = true }
 
                     -- nvim-treesitter/nvim-treesitter-context
                     hl.TreesitterContext = { bg = palette.bg2 }

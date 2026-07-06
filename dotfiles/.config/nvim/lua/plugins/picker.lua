@@ -1,10 +1,13 @@
 local isWindows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
 local isLinux = vim.fn.has("linux") == 1
+-- local isWindows = true
+-- local isLinux = false
 
 ---@class PickerActions
 ---@field buffers fun(opts?: table)
 ---@field files fun(opts?: table)
 ---@field git_status fun(opts?: table)
+---@field git_commits fun(opts?: table)
 ---@field help_tags fun(opts?: table)
 ---@field resume fun(opts?: table)
 ---@field live_grep fun(opts?: table)
@@ -36,6 +39,7 @@ local function picker_keymaps(pickers)
         pickers.files({ cwd = vim.fn.stdpath("config") })
     end, "Find Files")
     map("<leader>fg", pickers.git_status, "[F]ind [G]it status")
+    map("<leader>fc", pickers.git_commits, "[F]ind Git [C]ommits")
     map("<leader>fh", pickers.help_tags, "[F]ind [H]elp tags")
     map("<leader>fr", pickers.resume, "[F]ind [R]esume")
     map("<leader>fs", pickers.live_grep, "[F]ind Live Grep [S]earch")
@@ -92,11 +96,15 @@ return {
         config = function()
             local fzf_lua = require("fzf-lua")
             fzf_lua.setup({
-                files = {
-                    previewer = false,
-                },
-                oldfiles = {
-                    previewer = false,
+                files = { previewer = false },
+                oldfiles = { previewer = false },
+                buffers = {
+                    winopts = {
+                        preview = {
+                            layout = "horizontal",
+                            horizontal = "right:50%",
+                        },
+                    },
                 },
                 grep = {
                     winopts = {
@@ -139,6 +147,7 @@ return {
                 resume = FzfLua.resume,
                 undotree = FzfLua.undotree,
                 git_status = FzfLua.git_status,
+                git_commits = FzfLua.git_commits,
                 help_tags = FzfLua.help_tags,
                 live_grep = FzfLua.live_grep,
                 lsp_declarations = FzfLua.lsp_declarations,
@@ -181,20 +190,65 @@ return {
             -- See `:help telescope` and `:help telescope.setup()`
             require("telescope").setup({
                 defaults = {
+                    layout_strategy = "vertical",
+                    sorting_strategy = "ascending",
+
                     mappings = {
                         i = {
-                            ["<c-q>"] = require("telescope.actions").send_to_qflist
+                            ["<C-q>"] = require("telescope.actions").send_to_qflist
                                 + require("telescope.actions").open_qflist,
-                            ["<c-l>"] = require("telescope.actions").send_to_loclist
+                            ["<C-l>"] = require("telescope.actions").send_to_loclist
                                 + require("telescope.actions").open_loclist,
                         },
                     },
-                },
-                -- pickers = {}
-                extensions = {
-                    ["ui-select"] = {
-                        require("telescope.themes").get_dropdown(),
+
+                    layout_config = {
+                        width = 0.8,
+                        height = 0.95,
+
+                        vertical = {
+                            prompt_position = "top",
+                            preview_cutoff = 20,
+                        },
                     },
+                },
+
+                pickers = {
+                    find_files = {
+                        previewer = false,
+                    },
+
+                    oldfiles = {
+                        previewer = false,
+                    },
+
+                    live_grep = {
+                        layout_strategy = "vertical",
+                    },
+
+                    current_buffer_fuzzy_find = {
+                        layout_strategy = "vertical",
+                    },
+
+                    lsp_references = {
+                        layout_strategy = "vertical",
+                    },
+
+                    lsp_definitions = {
+                        layout_strategy = "vertical",
+                    },
+
+                    lsp_implementations = {
+                        layout_strategy = "vertical",
+                    },
+
+                    lsp_type_definitions = {
+                        layout_strategy = "vertical",
+                    },
+                },
+
+                extensions = {
+                    ["ui-select"] = require("telescope.themes").get_dropdown(),
                 },
             })
 
@@ -218,6 +272,7 @@ return {
                 files = builtin.find_files,
                 live_grep = builtin.live_grep,
                 git_status = builtin.git_status,
+                git_commits = builtin.git_commits,
                 help_tags = builtin.help_tags,
                 oldfiles = builtin.oldfiles,
                 resume = builtin.resume,
