@@ -1,144 +1,42 @@
 local isWindows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
 local isLinux = vim.fn.has("linux") == 1
--- local isWindows = true
--- local isLinux = false
 
----@class PickerActions
----@field buffers fun(opts?: table)
----@field files fun(opts?: table)
----@field git_status fun(opts?: table)
----@field git_commits fun(opts?: table)
----@field help_tags fun(opts?: table)
----@field resume fun(opts?: table)
----@field live_grep fun(opts?: table)
----@field oldfiles fun(opts?: table)
----@field blines fun(opts?: table)
----@field builtin fun(opts?: table)
----@field undotree fun(opts?: table)
----@field lsp_definitions fun(opts?: table)
----@field lsp_references fun(opts?: table)
----@field lsp_implementations fun(opts?: table)
----@field lsp_declarations fun(opts?: table)
----@field lsp_workspace_symbols fun(opts?: table)
----@field lsp_document_symbols fun(opts?: table)
----
----@param pickers PickerActions
-local function picker_keymaps(pickers)
-    ---@param keys string
-    ---@param func function|string
-    ---@param desc string
-    ---@param mode string|string[]|nil
-    local map = function(keys, func, desc, mode)
-        mode = mode or "n"
-        vim.keymap.set(mode, keys, func, { desc = desc })
-    end
+local picker_utils = require("utils.picker")
 
-    map("<leader><space>", pickers.buffers, "Find Buffers")
-    map("<leader>ff", pickers.files, "[F]ind Files")
-    map("<leader>fn", function()
-        pickers.files({ cwd = vim.fn.stdpath("config") })
-    end, "Find Files")
-    map("<leader>fg", pickers.git_status, "[F]ind [G]it status")
-    map("<leader>fc", pickers.git_commits, "[F]ind Git [C]ommits")
-    map("<leader>fh", pickers.help_tags, "[F]ind [H]elp tags")
-    map("<leader>fr", pickers.resume, "[F]ind [R]esume")
-    map("<leader>fs", pickers.live_grep, "[F]ind Live Grep [S]earch")
-    map("<leader>f.", pickers.oldfiles, "[F]ind Old files")
-    map("<leader>/", pickers.blines, "Search Buf Lines")
-    map("<leader>fp", pickers.builtin, "[F]ind builtins")
-    map("<leader>u", pickers.undotree, "[F]ind [U]ndotree")
-
-    local lspKeysGroup = vim.api.nvim_create_augroup("tripathics/lsp-keys-group", { clear = true })
-    vim.api.nvim_create_autocmd("LspAttach", {
-        group = lspKeysGroup,
-        callback = function(ev)
-            local client = vim.lsp.get_client_by_id(ev.data.client_id)
-            local bufnr = ev.buf
-
-            if not client then
-                return
-            end
-
-            ---Map keys for LSP actions
-            ---@param keys string
-            ---@param func function|string
-            ---@param desc string
-            ---@param mode string|string[]|nil
-            local keymap = function(keys, func, desc, mode)
-                mode = mode or "n"
-                vim.keymap.set(mode, keys, func, { desc = "LSP: " .. desc })
-            end
-
-            if client:supports_method("textDocument/definition", bufnr) then
-                keymap("gd", function()
-                    pickers.lsp_definitions({ jump1 = true })
-                end, "Go to definition")
-                keymap("gD", function()
-                    pickers.lsp_definitions({ jump1 = false })
-                end, "Peek definition")
-            end
-
-            keymap("rr", pickers.lsp_references, "Find references")
-            keymap("gri", pickers.lsp_implementations, "Implementation")
-            keymap("grd", pickers.lsp_definitions, "Find definitions")
-            keymap("grD", pickers.lsp_declarations, "Find declarations")
-            keymap("gW", pickers.lsp_workspace_symbols, "Workspace Symbols")
-            keymap("gO", pickers.lsp_document_symbols, "Document Symbols")
-        end,
-    })
-end
-
+---@type LazySpec[]
 return {
-    {
+    {   -- fzf-lua for linux
         "ibhagwan/fzf-lua",
         enabled = isLinux,
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             local fzf_lua = require("fzf-lua")
+
+            local vertical_picker_layout = {
+                winopts = {
+                    preview = {
+                        layout = "vertical",
+                        vertical = "up:60%",
+                    },
+                },
+            }
+
             fzf_lua.setup({
                 files = { previewer = false },
                 oldfiles = { previewer = false },
-                buffers = {
-                    winopts = {
-                        preview = {
-                            layout = "horizontal",
-                            horizontal = "right:50%",
-                        },
-                    },
-                },
-                grep = {
-                    winopts = {
-                        preview = {
-                            layout = "vertical",
-                            vertical = "up:60%",
-                        },
-                    },
-                },
-                blines = {
-                    winopts = {
-                        preview = {
-                            layout = "vertical",
-                            vertical = "up:60%",
-                        },
-                    },
-                },
+                buffers = vertical_picker_layout,
+                grep = vertical_picker_layout,
+                blines = vertical_picker_layout,
 
                 lsp = {
-                    winopts = {
-                        preview = {
-                            layout = "vertical",
-                            vertical = "up:60%",
-                        },
-                    },
-                    code_actions = {
-                        previewer = false,
-                    },
+                    winopts = vertical_picker_layout,
+                    code_actions = { previewer = false },
                 },
             }, true)
 
             fzf_lua.register_ui_select()
 
-            picker_keymaps({
+            picker_utils.map_pickers({
                 blines = FzfLua.blines,
                 buffers = FzfLua.buffers,
                 builtin = FzfLua.builtin,
@@ -158,8 +56,9 @@ return {
                 lsp_workspace_symbols = FzfLua.lsp_workspace_symbols,
             })
         end,
+        keys = vim.tbl_values(picker_utils.keys),
     },
-    {
+    {   -- telescope for windows
         "nvim-telescope/telescope.nvim",
         enabled = isWindows,
         -- event = "VimEnter",
@@ -188,6 +87,10 @@ return {
 
             -- [[ Configure Telescope ]]
             -- See `:help telescope` and `:help telescope.setup()`
+
+            local actions = require("telescope.actions")
+            local builtin = require("telescope.builtin")
+            local themes = require("telescope.themes")
             require("telescope").setup({
                 defaults = {
                     layout_strategy = "vertical",
@@ -195,10 +98,8 @@ return {
 
                     mappings = {
                         i = {
-                            ["<C-q>"] = require("telescope.actions").send_to_qflist
-                                + require("telescope.actions").open_qflist,
-                            ["<C-l>"] = require("telescope.actions").send_to_loclist
-                                + require("telescope.actions").open_loclist,
+                            ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+                            ["<C-l>"] = actions.send_to_loclist + actions.open_loclist,
                         },
                     },
 
@@ -256,10 +157,7 @@ return {
             pcall(require("telescope").load_extension, "fzf")
             pcall(require("telescope").load_extension, "ui-select")
 
-            -- See `:help telescope.builtin`
-            local builtin = require("telescope.builtin")
-            local themes = require("telescope.themes")
-            picker_keymaps({
+            picker_utils.map_pickers({
                 blines = function()
                     -- You can pass additional configuration to Telescope to change the theme, layout, etc.
                     builtin.current_buffer_fuzzy_find(themes.get_dropdown({
@@ -288,5 +186,6 @@ return {
                 lsp_declarations = function() end,
             })
         end,
+        keys = vim.tbl_values(picker_utils.keys),
     },
 }

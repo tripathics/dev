@@ -14,9 +14,6 @@ vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window 
 vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -4<CR>", { desc = "Decrease window width" })
 vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +4<CR>", { desc = "Increase window width" })
 
--- tabs
-vim.keymap.set("n", "<leader>tn", "<cmd>tab split<CR>", { desc = "Split in new tab" })
-
 -- keep everything centered while scrolling
 vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and go to center" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and go to center" })
@@ -74,16 +71,6 @@ vim.keymap.set("n", "<leader>ts", function()
 end, { desc = "Open a [t]erminal [s]mall" })
 
 -- Toggles
-vim.keymap.set("n", "<leader>tn", function ()
-    if vim.o.nu then
-        vim.cmd("set nonu")
-        vim.cmd("set nornu")
-    else
-        vim.cmd("set nu")
-        vim.cmd("set rnu")
-    end
-end, { desc = "[T]oggle relative nu" })
-
 vim.keymap.set("n", "<leader>tw", function ()
 	vim.cmd("set wrap!")
 end, { desc = "[T]oggle word wrap" })

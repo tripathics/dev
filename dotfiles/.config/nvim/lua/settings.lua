@@ -14,6 +14,9 @@ vim.opt.expandtab = true
 vim.opt.guifont = "Lilex:h14"
 vim.opt.termguicolors = true
 
+vim.opt.number = true
+vim.opt.relativenumber = true
+
 vim.opt.showmode = false
 
 vim.wo.signcolumn = "yes"
@@ -28,9 +31,6 @@ vim.opt.listchars = { tab = "» ", trail = "·" }
 vim.opt.breakindent = true
 
 -- folds
--- vim.opt.foldenable = true
--- vim.opt.foldlevel = 99
-
 vim.wo.foldcolumn = '1'
 vim.opt.foldlevelstart = 99
 vim.wo.foldtext = ''
