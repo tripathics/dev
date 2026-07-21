@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-yay -S --noconfirm --needed ttf-lilex-nerd ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-liberation
+yay -S --noconfirm --needed ttf-lilex-nerd ttf-jetbrains-mono-nerd noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-liberation ttfautohint
 fc-cache -fv

@@ -41,7 +41,7 @@ zstyle ':vcs_info:git:*' formats ' %F{blue}(%b)%f'
 zstyle ':vcs_info:git:*' actionformats ' %F{yellow}(%b|%a)%f'
 
 setopt PROMPT_SUBST
-PROMPT='%B%F{green}%~%f${vcs_info_msg_0_} %F{white}❯%f%b '
+PROMPT='%B%F{green}%~%f${vcs_info_msg_0_} %F{white}>%f%b '
 
 ####
 # Aliases
@@ -67,14 +67,14 @@ fi
 FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
-  eval "$(fnm env --shell bash)"
+  eval "$(fnm env --shell zsh)"
 fi
 
 # pnpm
 export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 
@@ -83,3 +83,18 @@ export CARGO_PATH="$HOME/.cargo/bin"
 if [ -d "$CARGO_PATH" ]; then
   export PATH="$CARGO_PATH:$PATH"
 fi
+
+# go
+export GOPATH="$(go env GOPATH)"
+if [ -d "$GOPATH" ]; then
+  export PATH="$PATH:$GOPATH/bin"
+fi
+
+####
+# environment defaults
+####
+export EDITOR=nvim
+export VISUAL=nvim
+
+# secrets
+[ -f ~/.config/secrets/env ] && source ~/.config/secrets/env
