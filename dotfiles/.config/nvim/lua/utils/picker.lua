@@ -1,28 +1,30 @@
 local M = {}
 
-local picker_keys = {
-    buffers = "<leader><space>",
-    files = "<leader>ff",
-    nvim_config_files = "<leader>fn",
-    git_status = "<leader>fg",
-    git_commits = "<leader>fc",
-    help_tags = "<leader>fh",
-    resume = "<leader>fr",
-    live_grep = "<leader>fs",
-    oldfiles = "<leader>f.",
-    blines = "<leader>/",
-    builtin = "<leader>fp",
-    undotree = "<leader>u",
-
-    lsp_references = "rr",
-    lsp_implementations = "gri",
-    lsp_definitions = "grd",
-    lsp_declarations = "grD",
-    lsp_workspace_symbols = "gW",
-    lsp_document_symbols = "gO",
+local picker_defs = {
+    buffers = { keys = "<leader><space>", desc = "Find Buffers" },
+    files = { keys = "<leader>ff", desc = "Find Files" },
+    nvim_config_files = { keys = "<leader>fn", desc = "Find Nvim config" },
+    git_status = { keys = "<leader>fg", desc = "Find Git status" },
+    git_commits = { keys = "<leader>fc", desc = "Find Git Commits" },
+    help_tags = { keys = "<leader>fh", desc = "Find Help tags" },
+    resume = { keys = "<leader>fr", desc = "Find Resume" },
+    live_grep = { keys = "<leader>fs", desc = "Find live grep Search" },
+    oldfiles = { keys = "<leader>f.", desc = "Find old files" },
+    blines = { keys = "<leader>/", desc = "Search Buf Lines" },
+    builtin = { keys = "<leader>fp", desc = "Find builtin Pickers" },
+    undotree = { keys = "<leader>u", desc = "Find Undotree" },
+    lsp_references = { keys = "rr", desc = "LSP: Find References" },
+    lsp_implementations = { keys = "gri", desc = "LSP: Implementation" },
+    lsp_definitions = { keys = "grd", desc = "LSP: Find definitions" },
+    lsp_declarations = { keys = "grD", desc = "LSP: Find declarations" },
+    lsp_workspace_symbols = { keys = "gW", desc = "LSP: Workspace Symbols" },
+    lsp_document_symbols = { keys = "gO", desc = "LSP: Document Symbols" },
 }
 
-M.keys = picker_keys
+-- use in lazy spec keys
+M.keymaps = vim.tbl_values(vim.tbl_map(function(def)
+    return { def.keys, desc = def.desc }
+end, picker_defs))
 
 ---@class PickerActions
 ---@field buffers fun(opts?: table)
@@ -54,20 +56,17 @@ M.map_pickers = function(pickers)
         vim.keymap.set(mode, keys, func, { desc = desc })
     end
 
-    map(picker_keys.buffers, pickers.buffers, "Find Buffers")
-    map(picker_keys.files, pickers.files, "[F]ind Files")
-    map("<leader>fn", function()
+    for name, def in pairs(picker_defs) do
+        local key = def.keys
+        local picker_fn = pickers[name]
+        if picker_fn and type(picker_fn) == "function" then
+            vim.keymap.set("n", key, picker_fn, { desc = def.desc })
+        end
+    end
+
+    vim.keymap.set("n", picker_defs.nvim_config_files.keys, function()
         pickers.files({ cwd = vim.fn.stdpath("config") })
-    end, "Find Files")
-    map(picker_keys.git_status, pickers.git_status, "[F]ind [G]it status")
-    map(picker_keys.git_commits, pickers.git_commits, "[F]ind Git [C]ommits")
-    map(picker_keys.help_tags, pickers.help_tags, "[F]ind [H]elp tags")
-    map(picker_keys.resume, pickers.resume, "[F]ind [R]esume")
-    map(picker_keys.live_grep, pickers.live_grep, "[F]ind Live Grep [S]earch")
-    map(picker_keys.oldfiles, pickers.oldfiles, "[F]ind Old files")
-    map(picker_keys.blines, pickers.blines, "Search Buf Lines")
-    map(picker_keys.builtin, pickers.builtin, "[F]ind builtins")
-    map(picker_keys.undotree, pickers.undotree, "[F]ind [U]ndotree")
+    end, { desc = picker_defs.nvim_config_files.desc })
 
     local lspKeysGroup = vim.api.nvim_create_augroup("tripathics/lsp-keys-group", { clear = true })
     vim.api.nvim_create_autocmd("LspAttach", {
@@ -89,12 +88,34 @@ M.map_pickers = function(pickers)
                 end, "LSP: Peek definition")
             end
 
-            map(picker_keys.lsp_references, pickers.lsp_references, "LSP: Find references")
-            map(picker_keys.lsp_implementations, pickers.lsp_implementations, "LSP: Implementation")
-            map(picker_keys.lsp_definitions, pickers.lsp_definitions, "LSP: Find definitions")
-            map(picker_keys.lsp_declarations, pickers.lsp_declarations, "LSP: Find declarations")
-            map(picker_keys.lsp_workspace_symbols, pickers.lsp_workspace_symbols, "LSP: Workspace Symbols")
-            map(picker_keys.lsp_document_symbols, pickers.lsp_document_symbols, "LSP: Document Symbols")
+            for _, name in ipairs({
+                "lsp_references",
+                "lsp_implementations",
+                "lsp_definitions",
+                "lsp_declarations",
+                "lsp_workspace_symbols",
+                "lsp_document_symbols",
+            }) do
+                local def = picker_defs[name]
+                if pickers[name] then
+                    vim.keymap.set("n", def.keys, pickers[name], { desc = def.desc })
+                end
+            end
+
+            -- map(picker_defs.lsp_references.keys, pickers.lsp_references, picker_defs.lsp_references.desc)
+            -- map(picker_defs.lsp_implementations.keys, pickers.lsp_implementations, picker_defs.lsp_implementations.desc)
+            -- map(picker_defs.lsp_definitions.keys, pickers.lsp_definitions, picker_defs.lsp_definitions.desc)
+            -- map(picker_defs.lsp_declarations.keys, pickers.lsp_declarations, picker_defs.lsp_declarations.desc)
+            -- map(
+            --     picker_defs.lsp_workspace_symbols.keys,
+            --     pickers.lsp_workspace_symbols,
+            --     picker_defs.lsp_workspace_symbols.desc
+            -- )
+            -- map(
+            --     picker_defs.lsp_document_symbols.keys,
+            --     pickers.lsp_document_symbols,
+            --     picker_defs.lsp_document_symbols.keys
+            -- )
         end,
     })
 end

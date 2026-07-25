@@ -44,11 +44,6 @@ return {
             end,
             desc = "File explorer in current buf directory",
         },
-        {
-            ".",
-            cd_current_branch_depth,
-            desc = "cd into current directory",
-        },
     },
     opts = {
         options = {
@@ -85,15 +80,21 @@ return {
     config = function(_, opts)
         require("mini.files").setup(opts)
 
-        -- I like rounded borders
         vim.api.nvim_create_autocmd("User", {
             pattern = "MiniFilesWindowOpen",
             callback = function(args)
                 local win_id = args.data.win_id
+                local buf_id = args.buf
 
                 local config = vim.api.nvim_win_get_config(win_id)
                 config.border = "rounded"
                 vim.api.nvim_win_set_config(win_id, config)
+
+
+                vim.keymap.set('n', '.', cd_current_branch_depth, {
+                    buf = buf_id,
+                    desc = "cd into current directory",
+                })
             end,
         })
 

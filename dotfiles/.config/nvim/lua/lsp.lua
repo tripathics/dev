@@ -1,5 +1,11 @@
--- Diagnostic keymaps
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+----
+--- Diagnostic config
+----
+local default_virtual_text_config = {
+    current_line = true,
+    virt_text_pos = "eol_right_align",
+}
+
 -- Diagnostic config
 vim.diagnostic.config({
     severity_sort = true,
@@ -11,7 +17,27 @@ vim.diagnostic.config({
             [vim.diagnostic.severity.HINT] = "󰌵 ",
         },
     },
+    virtual_text = default_virtual_text_config,
 })
+
+-- Diagnostic keymaps
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+vim.keymap.set("n", "gk", function()
+    local new_virtual_lines = not vim.diagnostic.config().virtual_lines
+    if new_virtual_lines == true then
+        vim.diagnostic.config({
+            virtual_lines = true,
+            virtual_text = false,
+        })
+        vim.notify("Virtual lines visible")
+    else
+        vim.diagnostic.config({
+            virtual_lines = false,
+            virtual_text = default_virtual_text_config,
+        })
+        vim.notify("Virtual lines hidden")
+    end
+end, { desc = "Toggle diagnoistic virtual lines" })
 
 --- Setup keymaps and autocmds for given buffer
 ---@param client_id integer
@@ -39,11 +65,6 @@ local function onAttach(client_id, bufnr)
     end
 
     keymap("grn", vim.lsp.buf.rename, "Rename")
-
-    keymap("gk", function()
-        local new_virtual_text = not vim.diagnostic.config().virtual_text
-        vim.diagnostic.config({ virtual_text = new_virtual_text })
-    end, "Toggle diagnoistic virtual text")
 
     if client:supports_method("textDocument/documentHighlight") then
         local under_cursor_highlights_group =

@@ -58,7 +58,7 @@ vim.opt.confirm = true
 vim.opt.mouse = "a"
 
 vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
+vim.opt.timeoutlen = 500
 
 -- searching
 vim.opt.ignorecase = true

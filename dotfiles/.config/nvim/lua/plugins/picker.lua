@@ -56,7 +56,7 @@ return {
                 lsp_workspace_symbols = FzfLua.lsp_workspace_symbols,
             })
         end,
-        keys = vim.tbl_values(picker_utils.keys),
+        keys = picker_utils.keymaps,
     },
     {   -- telescope for windows
         "nvim-telescope/telescope.nvim",
@@ -186,6 +186,6 @@ return {
                 lsp_declarations = function() end,
             })
         end,
-        keys = vim.tbl_values(picker_utils.keys),
+        keys = picker_utils.keymaps,
     },
 }
