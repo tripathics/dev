@@ -7,6 +7,23 @@ return {
         on_attach = function(bufnr)
             local gs = require("gitsigns")
 
+            local function with_save(fn)
+                return function(...)
+                    if vim.bo.modified then
+                        vim.notify("Buffer has unsaved changes", vim.log.levels.WARN)
+                        return
+                    end
+                    local range
+                    if vim.fn.mode():match("[vV\22]") then
+                        range = {
+                            vim.fn.line("'<"),
+                            vim.fn.line("'>"),
+                        }
+                    end
+                    return fn(range, ...)
+                end
+            end
+
             ---Map keys for working with hunks
             ---@param keys string
             ---@param func function|string
@@ -27,10 +44,10 @@ return {
 
             -- hunks
             map("<leader>hp", gs.preview_hunk, "[H]unk [p]review")
-            map("<leader>hr", ":Gitsigns reset_hunk<cr>", "[H]unk [r]eset")
-            map("<leader>hR", gs.reset_buffer, "[R]eset buffer")
-            map("<leader>hs", ":Gitsigns stage_hunk<cr>", "[H]unk [s]tage")
-            map("<leader>hS", gs.stage_buffer, "[S]tage buffer")
+            map("<leader>hr", with_save(gs.reset_hunk), "[H]unk [r]eset")
+            map("<leader>hR", with_save(gs.reset_buffer), "[R]eset buffer")
+            map("<leader>hs", with_save(gs.stage_hunk), "[H]unk [s]tage")
+            map("<leader>hS", with_save(gs.stage_buffer), "[S]tage buffer")
         end,
     },
 }

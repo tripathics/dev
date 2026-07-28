@@ -2,6 +2,7 @@
 ---@type LazySpec
 return {
     "tpope/vim-fugitive",
+    cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gclog", "GBrowse" },
     keys = {
         {"<leader>gs", vim.cmd.Git, desc = "[G]it status" },
         {"<leader>gc", "<cmd>0Gclog!<CR>", desc = "[G]it [l]og this file" },
