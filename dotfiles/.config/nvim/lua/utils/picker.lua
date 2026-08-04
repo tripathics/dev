@@ -7,6 +7,7 @@ local picker_defs = {
     git_status = { keys = "<leader>fg", desc = "Find Git status" },
     git_commits = { keys = "<leader>fc", desc = "Find Git Commits" },
     help_tags = { keys = "<leader>fh", desc = "Find Help tags" },
+    keymaps = { keys = "<leader>fk", desc = "Find Keymaps" },
     resume = { keys = "<leader>fr", desc = "Find Resume" },
     live_grep = { keys = "<leader>fs", desc = "Find live grep Search" },
     oldfiles = { keys = "<leader>f.", desc = "Find old files" },
@@ -32,6 +33,7 @@ end, picker_defs))
 ---@field git_status fun(opts?: table)
 ---@field git_commits fun(opts?: table)
 ---@field help_tags fun(opts?: table)
+---@field keymaps fun(opts?: table)
 ---@field resume fun(opts?: table)
 ---@field live_grep fun(opts?: table)
 ---@field oldfiles fun(opts?: table)
@@ -101,21 +103,6 @@ M.map_pickers = function(pickers)
                     vim.keymap.set("n", def.keys, pickers[name], { desc = def.desc })
                 end
             end
-
-            -- map(picker_defs.lsp_references.keys, pickers.lsp_references, picker_defs.lsp_references.desc)
-            -- map(picker_defs.lsp_implementations.keys, pickers.lsp_implementations, picker_defs.lsp_implementations.desc)
-            -- map(picker_defs.lsp_definitions.keys, pickers.lsp_definitions, picker_defs.lsp_definitions.desc)
-            -- map(picker_defs.lsp_declarations.keys, pickers.lsp_declarations, picker_defs.lsp_declarations.desc)
-            -- map(
-            --     picker_defs.lsp_workspace_symbols.keys,
-            --     pickers.lsp_workspace_symbols,
-            --     picker_defs.lsp_workspace_symbols.desc
-            -- )
-            -- map(
-            --     picker_defs.lsp_document_symbols.keys,
-            --     pickers.lsp_document_symbols,
-            --     picker_defs.lsp_document_symbols.keys
-            -- )
         end,
     })
 end

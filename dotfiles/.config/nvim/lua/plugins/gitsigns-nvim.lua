@@ -44,7 +44,7 @@ return {
 
             -- hunks
             map("<leader>hp", gs.preview_hunk, "[H]unk [p]review")
-            map("<leader>hr", with_save(gs.reset_hunk), "[H]unk [r]eset")
+            map("<leader>hr", gs.reset_hunk, "[H]unk [r]eset")
             map("<leader>hR", with_save(gs.reset_buffer), "[R]eset buffer")
             map("<leader>hs", with_save(gs.stage_hunk), "[H]unk [s]tage")
             map("<leader>hS", with_save(gs.stage_buffer), "[S]tage buffer")

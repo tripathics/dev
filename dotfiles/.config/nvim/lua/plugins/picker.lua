@@ -1,5 +1,6 @@
-local isWindows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
-local isLinux = vim.fn.has("linux") == 1
+-- local isLinux = vim.fn.has("linux") == 1
+
+local isLinux = false
 
 local picker_utils = require("utils.picker")
 
@@ -47,6 +48,7 @@ return {
                 git_status = FzfLua.git_status,
                 git_commits = FzfLua.git_commits,
                 help_tags = FzfLua.help_tags,
+                keymaps = FzfLua.keymaps,
                 live_grep = FzfLua.live_grep,
                 lsp_declarations = FzfLua.lsp_declarations,
                 lsp_definitions = FzfLua.lsp_definitions,
@@ -60,7 +62,7 @@ return {
     },
     {   -- telescope for windows
         "nvim-telescope/telescope.nvim",
-        enabled = isWindows,
+        enabled = isLinux == false,
         -- event = "VimEnter",
         dependencies = {
             "nvim-lua/plenary.nvim",
@@ -178,6 +180,7 @@ return {
                     vim.cmd("packadd undotree")
                     vim.cmd("Undotree")
                 end,
+                keymaps = builtin.keymaps,
                 lsp_references = builtin.lsp_references,
                 lsp_definitions = builtin.lsp_definitions,
                 lsp_document_symbols = builtin.lsp_document_symbols,
