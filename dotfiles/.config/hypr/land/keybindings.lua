@@ -22,6 +22,29 @@ hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(clipboardMenu))
 
 hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.window.float({ action = "toggle" }))
+
+local float_before_pin = {}
+hl.bind(mainMod .. " + P", function ()
+    local window = hl.get_active_window()
+    if window == nil then return end
+
+    if not window.pinned then
+        float_before_pin[window.address] = window.floating
+        if not window.floating then
+            hl.dispatch(hl.dsp.window.float({ action = "enable" }))
+        end
+        hl.dispatch(hl.dsp.window.pin({ action = "enable" }))
+    else
+        local original_float = float_before_pin[window.address]
+        if original_float == nil then
+            original_float = false
+        end
+        hl.dispatch(hl.dsp.window.float({ action = original_float and "enable" or "disable" }))
+        hl.dispatch(hl.dsp.window.pin({ action = "disable" }))
+        float_before_pin[window.address] = nil
+    end
+end)
+
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 hl.bind(mainMod .. " + TAB", hl.dsp.window.cycle_next())
