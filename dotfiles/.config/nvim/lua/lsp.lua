@@ -92,7 +92,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+vim.api.nvim_create_autocmd("VimEnter", {
     once = true,
     callback = function()
         vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities(nil, true) })

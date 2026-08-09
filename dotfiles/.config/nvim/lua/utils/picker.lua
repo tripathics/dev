@@ -46,28 +46,34 @@ end, picker_defs))
 ---@field lsp_declarations fun(opts?: table)
 ---@field lsp_workspace_symbols fun(opts?: table)
 ---@field lsp_document_symbols fun(opts?: table)
----
----@param pickers PickerActions
-M.map_pickers = function(pickers)
-    ---@param keys string
-    ---@param func function|string
-    ---@param desc string
-    ---@param mode string|string[]|nil
-    local map = function(keys, func, desc, mode)
-        mode = mode or "n"
-        vim.keymap.set(mode, keys, func, { desc = desc })
-    end
 
-    for name, def in pairs(picker_defs) do
-        local key = def.keys
-        local picker_fn = pickers[name]
-        if picker_fn and type(picker_fn) == "function" then
-            vim.keymap.set("n", key, picker_fn, { desc = def.desc })
+--- Register keymaps lazily
+---
+---@param loader fun(): PickerActions
+M.map_pickers = function(loader)
+    ---@type PickerActions|nil
+    local actions
+
+    ---@param name string
+    ---@param ... any
+    local function picker(name, ...)
+        if not actions then
+            actions = loader()
+        end
+        local fn = actions[name]
+        if fn then
+            return fn(...)
         end
     end
 
+    for name, def in pairs(picker_defs) do
+        vim.keymap.set("n", def.keys, function()
+            return picker(name)
+        end, { desc = def.desc })
+    end
+
     vim.keymap.set("n", picker_defs.nvim_config_files.keys, function()
-        pickers.files({ cwd = vim.fn.stdpath("config") })
+        picker("files", { cwd = vim.fn.stdpath("config") })
     end, { desc = picker_defs.nvim_config_files.desc })
 
     local lspKeysGroup = vim.api.nvim_create_augroup("tripathics/lsp-keys-group", { clear = true })
@@ -82,12 +88,12 @@ M.map_pickers = function(pickers)
             end
 
             if client:supports_method("textDocument/definition", bufnr) then
-                map("gd", function()
-                    pickers.lsp_definitions({ jump1 = true })
-                end, "LSP: Go to definition")
-                map("gD", function()
-                    pickers.lsp_definitions({ jump1 = false })
-                end, "LSP: Peek definition")
+                vim.keymap.set("n", "gd", function()
+                    picker("lsp_definitions", { jump1 = true })
+                end, { desc = "LSP: Go to definition" })
+                vim.keymap.set("n", "gD", function()
+                    picker("lsp_definitions", { jump1 = false })
+                end, { desc = "LSP: Peek definition" })
             end
 
             for _, name in ipairs({
@@ -98,10 +104,9 @@ M.map_pickers = function(pickers)
                 "lsp_workspace_symbols",
                 "lsp_document_symbols",
             }) do
-                local def = picker_defs[name]
-                if pickers[name] then
-                    vim.keymap.set("n", def.keys, pickers[name], { desc = def.desc })
-                end
+                vim.keymap.set("n", picker_defs[name].keys, function()
+                    return picker(name)
+                end, { desc = picker_defs[name].desc })
             end
         end,
     })
