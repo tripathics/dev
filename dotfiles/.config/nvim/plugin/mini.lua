@@ -51,5 +51,13 @@ add {
                 search_method = 'cover',
             }
         end,
+        keys = {
+            { '<leader>sa' },
+            { '<leader>sd' },
+            { '<leader>sf' },
+            { '<leader>sF' },
+            { '<leader>sh' },
+            { '<leader>sr' },
+        },
     },
 }

@@ -11,7 +11,7 @@ local function gh(src) return 'https://github.com/' .. src .. '.git' end
 ---@class Keys
 ---
 ---@field [1] string
----@field [2] string|function
+---@field [2]? string|function
 ---@field mode? string
 ---@field desc? string
 
@@ -28,6 +28,7 @@ local function gh(src) return 'https://github.com/' .. src .. '.git' end
 ---
 ---Lazily load plugin on these events
 ---@field events PluginEvents
+---@field pattern? string|string[]
 
 ---Do vim.pack.add and load
 ---@param specs Spec[]
@@ -65,17 +66,28 @@ local function install(specs, packadd_opts)
 
         if not spec.events and not spec.keys then setup() end
 
-        if spec.events then vim.api.nvim_create_autocmd(spec.events, { once = true, callback = setup }) end
+        if spec.events then
+            vim.api.nvim_create_autocmd(spec.events, { once = true, pattern = spec.pattern, callback = setup })
+        end
 
         if spec.keys then
             for _, k in ipairs(spec.keys) do
-                vim.keymap.set(k.mode or 'n', k[1], function()
-                    setup()
-                    local rhs = k[2]
-                    if type(rhs) == 'function' then
-                        rhs()
+                local lhs, rhs, mode = k[1], k[2], k.mode or 'n'
+                vim.keymap.set(mode, lhs, function()
+                    if rhs then
+                        setup()
+                        if type(rhs) == 'function' then
+                            rhs()
+                        else
+                            vim.api.nvim_feedkeys(rhs, 'n', false)
+                        end
                     else
-                        vim.api.nvim_feedkeys(rhs, 'n', false)
+                        vim.keymap.del(mode, lhs)
+                        setup()
+                        vim.schedule(function()
+                            local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
+                            vim.api.nvim_feedkeys(keys, 'm', false)
+                        end)
                     end
                 end, { desc = k.desc })
             end
