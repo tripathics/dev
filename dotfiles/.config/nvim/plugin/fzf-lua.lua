@@ -1,37 +1,33 @@
-local isLinux = vim.fn.has("linux") == 1
+local isLinux = vim.fn.has 'linux' == 1
 
-if not isLinux then
-    return
-end
+if not isLinux then return end
 
-local gh = require("utils.pack").gh
-local picker_utils = require("utils.picker")
+local gh = require('utils.pack').gh
+local picker_utils = require 'utils.picker'
 
 -- Register the plugin without loading it. `load = false` works like
 -- `:packadd!`: it adds fzf-lua to 'runtimepath' but defers loading its
 -- plugin/ files until `vim.cmd.packadd("fzf-lua")` is called.
-vim.pack.add({ gh("ibhagwan/fzf-lua") }, { load = false })
+vim.pack.add({ gh 'ibhagwan/fzf-lua' }, { load = false })
 
 local loaded = false
 
 local function load()
-    if loaded then
-        return
-    end
+    if loaded then return end
     loaded = true
 
-    vim.cmd.packadd("fzf-lua")
+    vim.cmd.packadd 'fzf-lua'
 
     local vertical_picker_layout = {
         winopts = {
             preview = {
-                layout = "vertical",
-                vertical = "up:60%",
+                layout = 'vertical',
+                vertical = 'up:60%',
             },
         },
     }
 
-    local fzf_lua = require("fzf-lua")
+    local fzf_lua = require 'fzf-lua'
     fzf_lua.setup({
         files = { previewer = false },
         oldfiles = { previewer = false },
@@ -78,9 +74,7 @@ local orig_ui_select = vim.ui.select
 local function lazy_ui_select(items, opts, on_choice)
     load()
     local current = vim.ui.select
-    if current == lazy_ui_select then
-        return orig_ui_select(items, opts, on_choice)
-    end
+    if current == lazy_ui_select then return orig_ui_select(items, opts, on_choice) end
     return current(items, opts, on_choice)
 end
 

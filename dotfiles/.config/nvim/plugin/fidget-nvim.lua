@@ -1,5 +1,9 @@
-local gh = require('utils.pack').gh
+local add = require('utils.pack').add
 
-vim.pack.add({ { src = gh("j-hui/fidget.nvim"), name = "fidget" } })
-
-require("fidget").setup {}
+add {
+    {
+        src = 'j-hui/fidget.nvim',
+        name = 'fidget',
+        config = function() require('fidget').setup {} end,
+    },
+}

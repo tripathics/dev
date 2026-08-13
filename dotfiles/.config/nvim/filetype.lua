@@ -1,12 +1,12 @@
-vim.filetype.add({
+vim.filetype.add {
     pattern = {
-        [".*"] = function(path, bufnr)
+        ['.*'] = function(path, bufnr)
             return vim.bo[bufnr]
-                    and vim.bo[bufnr].filetype ~= "bigfile"  -- prevent infinite loop
+                    and vim.bo[bufnr].filetype ~= 'bigfile' -- prevent infinite loop
                     and path
                     and vim.fn.getfsize(path) > (1024 * 500) -- 500 KB
-                    and "bigfile"
+                    and 'bigfile'
                 or nil
         end,
     },
-})
+}

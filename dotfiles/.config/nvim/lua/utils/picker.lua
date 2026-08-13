@@ -1,31 +1,29 @@
 local M = {}
 
 local picker_defs = {
-    buffers = { keys = "<leader><space>", desc = "Find Buffers" },
-    files = { keys = "<leader>ff", desc = "Find Files" },
-    nvim_config_files = { keys = "<leader>fn", desc = "Find Nvim config" },
-    git_status = { keys = "<leader>fg", desc = "Find Git status" },
-    git_commits = { keys = "<leader>fc", desc = "Find Git Commits" },
-    help_tags = { keys = "<leader>fh", desc = "Find Help tags" },
-    keymaps = { keys = "<leader>fk", desc = "Find Keymaps" },
-    resume = { keys = "<leader>fr", desc = "Find Resume" },
-    live_grep = { keys = "<leader>fs", desc = "Find live grep Search" },
-    oldfiles = { keys = "<leader>f.", desc = "Find old files" },
-    blines = { keys = "<leader>/", desc = "Search Buf Lines" },
-    builtin = { keys = "<leader>fp", desc = "Find builtin Pickers" },
-    undotree = { keys = "<leader>u", desc = "Find Undotree" },
-    lsp_references = { keys = "rr", desc = "LSP: Find References" },
-    lsp_implementations = { keys = "gri", desc = "LSP: Implementation" },
-    lsp_definitions = { keys = "grd", desc = "LSP: Find definitions" },
-    lsp_declarations = { keys = "grD", desc = "LSP: Find declarations" },
-    lsp_workspace_symbols = { keys = "gW", desc = "LSP: Workspace Symbols" },
-    lsp_document_symbols = { keys = "gO", desc = "LSP: Document Symbols" },
+    buffers = { keys = '<leader><space>', desc = 'Find Buffers' },
+    files = { keys = '<leader>ff', desc = 'Find Files' },
+    nvim_config_files = { keys = '<leader>fn', desc = 'Find Nvim config' },
+    git_status = { keys = '<leader>fg', desc = 'Find Git status' },
+    git_commits = { keys = '<leader>fc', desc = 'Find Git Commits' },
+    help_tags = { keys = '<leader>fh', desc = 'Find Help tags' },
+    keymaps = { keys = '<leader>fk', desc = 'Find Keymaps' },
+    resume = { keys = '<leader>fr', desc = 'Find Resume' },
+    live_grep = { keys = '<leader>fs', desc = 'Find live grep Search' },
+    oldfiles = { keys = '<leader>f.', desc = 'Find old files' },
+    blines = { keys = '<leader>/', desc = 'Search Buf Lines' },
+    builtin = { keys = '<leader>fp', desc = 'Find builtin Pickers' },
+    undotree = { keys = '<leader>u', desc = 'Find Undotree' },
+    lsp_references = { keys = 'grr', desc = 'LSP: Find References' },
+    lsp_implementations = { keys = 'gri', desc = 'LSP: Implementation' },
+    lsp_definitions = { keys = 'grd', desc = 'LSP: Find definitions' },
+    lsp_declarations = { keys = 'grD', desc = 'LSP: Find declarations' },
+    lsp_workspace_symbols = { keys = 'gW', desc = 'LSP: Workspace Symbols' },
+    lsp_document_symbols = { keys = 'gO', desc = 'LSP: Document Symbols' },
 }
 
 -- use in lazy spec keys
-M.keymaps = vim.tbl_values(vim.tbl_map(function(def)
-    return { def.keys, desc = def.desc }
-end, picker_defs))
+M.keymaps = vim.tbl_values(vim.tbl_map(function(def) return { def.keys, desc = def.desc } end, picker_defs))
 
 ---@class PickerActions
 ---@field buffers fun(opts?: table)
@@ -57,56 +55,60 @@ M.map_pickers = function(loader)
     ---@param name string
     ---@param ... any
     local function picker(name, ...)
-        if not actions then
-            actions = loader()
-        end
+        if not actions then actions = loader() end
         local fn = actions[name]
-        if fn then
-            return fn(...)
-        end
+        if fn then return fn(...) end
     end
 
     for name, def in pairs(picker_defs) do
-        vim.keymap.set("n", def.keys, function()
-            return picker(name)
-        end, { desc = def.desc })
+        vim.keymap.set('n', def.keys, function() return picker(name) end, { desc = def.desc })
     end
 
-    vim.keymap.set("n", picker_defs.nvim_config_files.keys, function()
-        picker("files", { cwd = vim.fn.stdpath("config") })
-    end, { desc = picker_defs.nvim_config_files.desc })
+    vim.keymap.set(
+        'n',
+        picker_defs.nvim_config_files.keys,
+        function() picker('files', { cwd = vim.fn.stdpath 'config' }) end,
+        { desc = picker_defs.nvim_config_files.desc }
+    )
 
-    local lspKeysGroup = vim.api.nvim_create_augroup("tripathics/lsp-keys-group", { clear = true })
-    vim.api.nvim_create_autocmd("LspAttach", {
+    local lspKeysGroup = vim.api.nvim_create_augroup('tripathics/lsp-keys-group', { clear = true })
+    vim.api.nvim_create_autocmd('LspAttach', {
         group = lspKeysGroup,
         callback = function(ev)
             local client = vim.lsp.get_client_by_id(ev.data.client_id)
             local bufnr = ev.buf
 
-            if not client then
-                return
+            if not client then return end
+
+            if client:supports_method('textDocument/definition', bufnr) then
+                vim.keymap.set(
+                    'n',
+                    'gd',
+                    function() picker('lsp_definitions', { jump1 = true }) end,
+                    { desc = 'LSP: Go to definition' }
+                )
+                vim.keymap.set(
+                    'n',
+                    'gD',
+                    function() picker('lsp_definitions', { jump1 = false }) end,
+                    { desc = 'LSP: Peek definition' }
+                )
             end
 
-            if client:supports_method("textDocument/definition", bufnr) then
-                vim.keymap.set("n", "gd", function()
-                    picker("lsp_definitions", { jump1 = true })
-                end, { desc = "LSP: Go to definition" })
-                vim.keymap.set("n", "gD", function()
-                    picker("lsp_definitions", { jump1 = false })
-                end, { desc = "LSP: Peek definition" })
-            end
-
-            for _, name in ipairs({
-                "lsp_references",
-                "lsp_implementations",
-                "lsp_definitions",
-                "lsp_declarations",
-                "lsp_workspace_symbols",
-                "lsp_document_symbols",
-            }) do
-                vim.keymap.set("n", picker_defs[name].keys, function()
-                    return picker(name)
-                end, { desc = picker_defs[name].desc })
+            for _, name in ipairs {
+                'lsp_references',
+                'lsp_implementations',
+                'lsp_definitions',
+                'lsp_declarations',
+                'lsp_workspace_symbols',
+                'lsp_document_symbols',
+            } do
+                vim.keymap.set(
+                    'n',
+                    picker_defs[name].keys,
+                    function() return picker(name) end,
+                    { desc = picker_defs[name].desc }
+                )
             end
         end,
     })
