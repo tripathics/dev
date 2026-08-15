@@ -7,6 +7,7 @@ add {
         config = function()
             local render_md = require 'render-markdown'
             render_md.setup {
+                latex = { enabled = false },
                 file_types = { 'markdown', 'codecompanion' },
             }
         end,

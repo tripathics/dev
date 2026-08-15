@@ -12,7 +12,7 @@ local function gh(src) return 'https://github.com/' .. src .. '.git' end
 ---
 ---@field [1] string
 ---@field [2]? string|function
----@field mode? string
+---@field mode? string|string[]
 ---@field desc? string
 
 ---@class Spec
@@ -84,10 +84,8 @@ local function install(specs, packadd_opts)
                     else
                         vim.keymap.del(mode, lhs)
                         setup()
-                        vim.schedule(function()
-                            local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
-                            vim.api.nvim_feedkeys(keys, 'm', false)
-                        end)
+                        local keys = vim.api.nvim_replace_termcodes(lhs, true, false, true)
+                        vim.api.nvim_feedkeys(keys, 'm', false)
                     end
                 end, { desc = k.desc })
             end

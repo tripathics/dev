@@ -2,7 +2,7 @@ local textYankGroup = vim.api.nvim_create_augroup('text-yank-group', { clear = t
 
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = textYankGroup,
-    callback = function() vim.highlight.on_yank() end,
+    callback = function() vim.hl.hl_op() end,
 })
 
 -- now we have to autostart treesitter ourselves

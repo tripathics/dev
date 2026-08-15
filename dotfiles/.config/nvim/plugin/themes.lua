@@ -4,7 +4,9 @@ add ({
     { src = 'rose-pine/neovim', name = 'rose-pine' },
     { src = 'catppuccin/nvim', name = 'catppuccin' },
     { src = 'EdenEast/nightfox.nvim' },
-    { src = 'rebelot/kanagawa.nvim' },
+    { src = 'rebelot/kanagawa.nvim', config = function()
+        vim.cmd.colorscheme 'kanagawa-dragon'
+    end},
     {
         src = 'neanias/everforest-nvim',
         config = function()
@@ -24,7 +26,7 @@ add ({
                     hl.DiagnosticUnderlineHint = { undercurl = true, sp = palette.purple, fg = palette.none }
                 end,
             }
-            vim.cmd.colorscheme 'everforest'
+            -- vim.cmd.colorscheme 'everforest'
         end,
     },
 }, true)

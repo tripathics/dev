@@ -34,12 +34,11 @@ add {
         src = 'nvim-mini/mini.icons',
         config = function() require('mini.icons').setup { style = 'glyph' } end,
     },
-    { src = 'nvim-mini/mini.ai', opts = {} },
+    { src = 'nvim-mini/mini.ai', config = function() require('mini.ai').setup {} end },
     {
         src = 'nvim-mini/mini.surround',
         config = function()
             require('mini.surround').setup {
-                ---@module 'mini.surround'
                 mappings = {
                     add = '<leader>sa',
                     delete = '<leader>sd',
@@ -52,10 +51,10 @@ add {
             }
         end,
         keys = {
-            { '<leader>sa' },
+            { '<leader>sa', mode = { 'n', 'x' } },
             { '<leader>sd' },
-            { '<leader>sf' },
-            { '<leader>sF' },
+            { '<leader>sf', mode = { 'n', 'x', 'o' } },
+            { '<leader>sF', mode = { 'n', 'x', 'o' } },
             { '<leader>sh' },
             { '<leader>sr' },
         },

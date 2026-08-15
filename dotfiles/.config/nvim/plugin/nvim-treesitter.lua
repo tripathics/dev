@@ -55,6 +55,7 @@ add {
                 trim_scope = 'inner',
             }
         end,
+        events = { 'FileType' },
         keys = {
             {
                 '[n',
