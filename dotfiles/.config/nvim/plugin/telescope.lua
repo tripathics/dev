@@ -1,15 +1,19 @@
 local isLinux = vim.fn.has 'linux' == 1
-if isLinux then return end
-
 local picker_util = require 'utils.picker'
 local add = require('utils.pack').add
 
 add {
-    { src = 'nvim-lua/plenary.nvim' },
-    { src = 'nvim-telescope/telescope-ui-select.nvim' },
     {
         src = 'nvim-telescope/telescope.nvim',
+        keys = isLinux and {} or picker_util.keymaps,
         config = function()
+            if isLinux then return end
+
+            add {
+                { src = 'nvim-lua/plenary.nvim' },
+                { src = 'nvim-telescope/telescope-ui-select.nvim' },
+            }
+
             local actions = require 'telescope.actions'
             local builtin = require 'telescope.builtin'
             local themes = require 'telescope.themes'
@@ -107,6 +111,5 @@ add {
                 lsp_implementations = builtin.lsp_implementations,
             }
         end,
-        keys = picker_util.keymaps,
     },
 }

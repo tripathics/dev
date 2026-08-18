@@ -1,10 +1,10 @@
 local add = require('utils.pack').add
 
 add {
-    { src = 'nvim-lua/plenary.nvim' },
     {
         src = 'olimorris/codecompanion.nvim',
         config = function()
+            add { { src = 'nvim-lua/plenary.nvim' } }
             local codecompanion = require 'codecompanion'
             codecompanion.setup {
                 adapters = {

@@ -1,14 +1,17 @@
 local add = require('utils.pack').add
 
-add ({
-    { src = 'rose-pine/neovim', name = 'rose-pine' },
-    { src = 'catppuccin/nvim', name = 'catppuccin' },
-    { src = 'EdenEast/nightfox.nvim' },
-    { src = 'rebelot/kanagawa.nvim', config = function()
-        vim.cmd.colorscheme 'kanagawa-dragon'
-    end},
+add({
+    {
+        src = 'rose-pine/neovim',
+        name = 'rose-pine',
+        events = { 'ColorSchemePre' },
+        pattern = { 'rose-pine', 'rose-pine-moon', 'rose-pine-dawn', 'rose-pine-main' },
+    },
+    { src = 'rebelot/kanagawa.nvim', config = function() vim.cmd.colorscheme 'kanagawa-dragon' end },
     {
         src = 'neanias/everforest-nvim',
+        events = { 'ColorSchemePre' },
+        pattern = 'everforest',
         config = function()
             require('everforest').setup {
                 background = 'hard',
@@ -26,7 +29,6 @@ add ({
                     hl.DiagnosticUnderlineHint = { undercurl = true, sp = palette.purple, fg = palette.none }
                 end,
             }
-            -- vim.cmd.colorscheme 'everforest'
         end,
     },
 }, true)

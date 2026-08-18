@@ -1,13 +1,14 @@
 local isLinux = vim.fn.has 'linux' == 1
-if not isLinux then return end
-
 local add = require('utils.pack').add
 local picker_util = require 'utils.picker'
 
 add {
     {
         src = 'ibhagwan/fzf-lua',
+        keys = isLinux and picker_util.keymaps or {},
         config = function()
+            if not isLinux then return end
+
             local vertical_picker_layout = {
                 winopts = {
                     preview = {
@@ -54,6 +55,5 @@ add {
                 lsp_workspace_symbols = fzf_lua.lsp_workspace_symbols,
             }
         end,
-        keys = picker_util.keymaps,
     },
 }

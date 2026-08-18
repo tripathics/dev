@@ -40,7 +40,7 @@ end, { expr = true, desc = 'Create/Close fold' })
 vim.keymap.set('n', '<leader>R', '<cmd>restart<cr>', { desc = 'Restart Neovim' })
 
 -- open package manager
-vim.keymap.set('n', '<leader>L', '<cmd>packupdate ++offline<cr>', { desc = 'See installed' })
+vim.keymap.set('n', '<leader>P', ':packupdate ', { desc = 'Update or see plugins' })
 
 -- cd into current file parent dir
 vim.keymap.set('n', '<leader>.', function()
@@ -67,7 +67,7 @@ vim.keymap.set('n', '<leader>ts', function()
     vim.cmd.vnew()
     vim.cmd.term(TERM)
     vim.cmd.wincmd 'J'
-    vim.api.nvim_win_set_height(0, 15)
+    vim.api.nvim_win_resize(0, -1, 15)
 end, { desc = 'Open a [t]erminal [s]mall' })
 
 -- Toggles

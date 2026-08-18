@@ -5,12 +5,8 @@
       "src": "https://github.com/saghen/blink.cmp.git",
       "version": "1.0.0 - 2.0.0"
     },
-    "catppuccin": {
-      "rev": "edefef779ab08ce1a4a404713e3012b0d202bd35",
-      "src": "https://github.com/catppuccin/nvim.git"
-    },
     "codecompanion.nvim": {
-      "rev": "9a8e8602a7c72d10a827880fbb6fcd8bfa3830c7",
+      "rev": "75a43ba789cca4eea90aaa60b585aa5ab4a41967",
       "src": "https://github.com/olimorris/codecompanion.nvim.git"
     },
     "conform.nvim": {
@@ -53,10 +49,6 @@
       "rev": "8d5d0c5aa92449368ac251e85451d79d8f69d296",
       "src": "https://github.com/nvim-mini/mini.surround.git"
     },
-    "nightfox.nvim": {
-      "rev": "4dacd3f0185a2227bdf3b6c0975a8f0bf87cac9a",
-      "src": "https://github.com/EdenEast/nightfox.nvim.git"
-    },
     "nvim-treesitter": {
       "rev": "b9dc62715bb15417addb89e44b24b85a827ac62b",
       "src": "https://github.com/tripathics/nvim-treesitter.git"
@@ -82,7 +74,7 @@
       "src": "https://github.com/nvim-telescope/telescope-ui-select.nvim.git"
     },
     "telescope.nvim": {
-      "rev": "427b576c16792edad01a92b89721d923c19ad60f",
+      "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
       "src": "https://github.com/nvim-telescope/telescope.nvim.git"
     },
     "vim-fugitive": {
