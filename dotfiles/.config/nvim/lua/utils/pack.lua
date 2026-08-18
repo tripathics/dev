@@ -33,8 +33,10 @@ local function gh(src) return 'https://github.com/' .. src .. '.git' end
 ---Do vim.pack.add and load
 ---@param specs Spec[]
 ---@param packadd_opts { confirm?: boolean }
+---@return table<string, fun()>
 local function install(specs, packadd_opts)
     local by_name = {}
+    local loaders_by_src = {}
     local sources = {}
 
     for _, spec in ipairs(specs) do
@@ -46,7 +48,7 @@ local function install(specs, packadd_opts)
             version = spec.version,
         }
     end
-    if #sources == 0 then return end
+    if #sources == 0 then return loaders_by_src end
 
     ---Load installed plugin
     ---@param plug { spec: vim.pack.Spec, path: string }
@@ -63,6 +65,7 @@ local function install(specs, packadd_opts)
             if spec.config then spec.config() end
             configured = true
         end
+        loaders_by_src[spec.src] = setup
 
         if not spec.events and not spec.keys then setup() end
 
@@ -96,10 +99,12 @@ local function install(specs, packadd_opts)
         confirm = packadd_opts.confirm or false,
         load = load,
     })
+    return loaders_by_src
 end
+
 ---@param specs Spec[]
 ---@param confirm boolean|nil
-M.add = function(specs, confirm) install(specs, { confirm = confirm }) end
+M.add = function(specs, confirm) return install(specs, { confirm = confirm }) end
 
 M.gh = gh
 

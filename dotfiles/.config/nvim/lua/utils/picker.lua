@@ -98,4 +98,14 @@ M.map_pickers = function(pickers)
     })
 end
 
+M.register_ui_select = function(loader, callback)
+    local function picker_ui_select(...)
+        loader()
+        callback()
+        vim.ui.select(...)
+    end
+
+    vim.ui.select = picker_ui_select
+end
+
 return M
