@@ -41,7 +41,18 @@ zstyle ':vcs_info:git:*' formats ' %F{blue}(%b)%f'
 zstyle ':vcs_info:git:*' actionformats ' %F{yellow}(%b|%a)%f'
 
 setopt PROMPT_SUBST
-PROMPT='%B%F{green}%~%f${vcs_info_msg_0_} %F{white}>%f%b '
+catface() {
+    local s=$?
+    case $s in
+        0)           print -n "=^.^=" ;;
+        130)         print -n "=^ω^=" ;;
+        126)         print -n "=ಠ.ಠ=" ;;
+        127|255)     print -n "=o.o=" ;;
+        137|139|143) print -n "=;.;=" ;;
+        *)           print -n "=._.=" ;;
+    esac
+}
+PROMPT='$(catface) %B%F{green}%~%f${vcs_info_msg_0_}%b '
 
 ####
 # Aliases
