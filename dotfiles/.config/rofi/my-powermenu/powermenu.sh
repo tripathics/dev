@@ -76,7 +76,7 @@ run_cmd() {
 	if [[ "$1" == '--opt1' ]]; then
 		hyprlock
 	elif [[ "$1" == '--opt2' ]]; then
-		confirm_run 'hyprctl dispatch exit'
+		confirm_run "hyprctl dispatch 'hl.dsp.exit()'"
 	elif [[ "$1" == '--opt3' ]]; then
 		confirm_run 'playerctl pause; hyprlock & sleep 1 && systemctl suspend'
 	elif [[ "$1" == '--opt4' ]]; then

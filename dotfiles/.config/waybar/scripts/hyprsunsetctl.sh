@@ -6,10 +6,10 @@ DISABLED_ICON=
 
 set_hyprsunset() {
     if [[ "$1" == "ENABLE" ]]; then
-        hyprsunset -t 5000 > /dev/null 2>&1 &
+        hyprctl hyprsunset temperature 3500
         echo $! > "$PID_FILE"
     elif [[ -f "$PID_FILE" ]]; then
-        pkill -F "$PID_FILE"
+        hyprctl hyprsunset identity
         rm "$PID_FILE"
     fi
     # reload hyprsunset module in waybar
@@ -27,11 +27,11 @@ toggle_hyprsunset() {
 print_status() {
     if [[ -f "$PID_FILE" ]]; then 
         CLASS="enabled"
-        TEXT="$ENABLED_ICON ON"
+        TEXT="$ENABLED_ICON"
         TOOLTIP="hyprsunset on"
     else
         CLASS="disabled"
-        TEXT="$DISABLED_ICON OF"
+        TEXT="$DISABLED_ICON"
         TOOLTIP="hyprsunset off"
     fi
     printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' "$TEXT" "$CLASS" "$TOOLTIP"
