@@ -1,80 +1,102 @@
 #!/usr/bin/env bash
 
-PID_FILE="/tmp/hyprsunset.pid"
+STATE="$XDG_RUNTIME_DIR/hyprsunset-mode"
+AUTO_ICON=󰃡
 ENABLED_ICON=󰖚
 DISABLED_ICON=
 
+MANUAL_TEMP=3000
+
+mode() {
+    [[ -f "$STATE" ]] && cat "$STATE" || echo auto
+}
+
 set_hyprsunset() {
-    if [[ "$1" == "ENABLE" ]]; then
-        hyprctl hyprsunset temperature 3500
-        echo $! > "$PID_FILE"
-    elif [[ -f "$PID_FILE" ]]; then
-        hyprctl hyprsunset identity
-        rm "$PID_FILE"
-    fi
+    case "$1" in
+        auto)
+            hyprctl hyprsunset reset
+            ;;
+        on)
+            hyprctl hyprsunset temperature $MANUAL_TEMP
+            ;;
+        off)
+            hyprctl hyprsunset identity
+            ;;
+    esac
+    echo "$1" > "$STATE"
+
     # reload hyprsunset module in waybar
     pkill -SIGRTMIN+8 waybar
 }
 
-toggle_hyprsunset() {
-    if [[ -f "$PID_FILE" ]]; then
-        set_hyprsunset "DISABLE"
-    else
-        set_hyprsunset "ENABLE"
-    fi
-}
-
 print_status() {
-    if [[ -f "$PID_FILE" ]]; then 
-        CLASS="enabled"
-        TEXT="$ENABLED_ICON"
-        TOOLTIP="hyprsunset on"
-    else
-        CLASS="disabled"
-        TEXT="$DISABLED_ICON"
-        TOOLTIP="hyprsunset off"
-    fi
-    printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' "$TEXT" "$CLASS" "$TOOLTIP"
-}
+    case $(mode) in
+        auto)
+            CLASS="auto"
+            TEXT="$AUTO_ICON"
+            TOOLTIP="Auto"
+            ;;
+        on)
+            CLASS="enabled"
+            TEXT="$ENABLED_ICON"
+            TOOLTIP="On: ${MANUAL_TEMP}K"
+            ;;
+        off)
+            CLASS="disabled"
+            TEXT="$DISABLED_ICON"
+            TOOLTIP="Off: 6000K"
+            ;;
+    esac
 
-# Auto toggle based on time
-automatic_toggle() {
-    CURRENT_HOUR=$(date +%H)
-    if [ "$CURRENT_HOUR" -ge 18 ] || [ "$CURRENT_HOUR" -lt 6 ]; then
-        set_hyprsunset "ENABLE"
-    else
-        set_hyprsunset "DISABLE"
-    fi
-    print_status
+    TOOLTIP="Hyprsunset $TOOLTIP"
+    printf '{"text": "%s", "class": "%s", "tooltip": "%s"}\n' "$TEXT" "$CLASS" "$TOOLTIP"
 }
 
 NO_ARGS=0
 E_OPTERROR=85
 
+cycle_hyprsunset() {
+    case "$1" in
+        on|off|auto)
+            set_hyprsunset "$1"
+            ;;
+        *)
+            case "$(mode)" in
+                on)
+                    set_hyprsunset off
+                    ;;
+                off)
+                    set_hyprsunset auto
+                    ;;
+                auto)
+                    set_hyprsunset on
+                    ;;
+            esac
+    esac
+}
+
 if [ $# -eq $NO_ARGS ]
 then
-    toggle_hyprsunset
+    cycle_hyprsunset
     exit 0
 fi
 
 if [ $# -gt 1 ]
 then
-    echo "Usage: `basename $0` -[g|s|u|a]"
+    echo "Usage: `basename $0` -[g|s|u]"
     echo "  -g  Get status"
-    echo "  -a  Auto toggle based on time and get status"
     echo "  -s  Set (enable) hyprsunset"
     echo "  -u  Unset (disable) hyprsunset"
-    echo "  Toggle hyprsunset if no arguments are provided"
+    echo "  Cycle hyprsunset between on|off|auto with no args"
     exit $E_OPTERROR
 fi
 
 while getopts ":agsu" Option
 do
     case $Option in
-        s ) set_hyprsunset "ENABLE" ;;
-        u ) set_hyprsunset "DISABLE" ;;
+        s ) set_hyprsunset on ;;
+        u ) set_hyprsunset off ;;
         g ) print_status ;;
-        a ) automatic_toggle ;;
         * ) echo "Invalid option"; exit $E_OPTERROR ;;
     esac
 done
