@@ -56,7 +56,8 @@
   "custom/nightlight": {
     "interval": "once",
     "exec": "~/.config/waybar/scripts/hyprsunsetctl.sh -g",
-    "on-click": "~/.config/waybar/scripts/hyprsunsetctl.sh; pkill -SIGRTMIN+8 waybar",
+    "on-click": "~/.config/waybar/scripts/hyprsunsetctl.sh",
+    "on-click-right": "~/.config/waybar/scripts/hyprsunsetctl.sh -t",
     "signal": 8,
     "return-type": "json"
   },
